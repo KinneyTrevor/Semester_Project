@@ -1,4 +1,4 @@
-package project;
+package gui;
 
 import java.awt.EventQueue;
 import javax.swing.ImageIcon;
@@ -8,8 +8,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import java.awt.Font;
-import java.awt.Image;
-import java.net.URL;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -59,22 +57,15 @@ public class GUI
 		frmWeatherStation = new JFrame();
 		frmWeatherStation.setTitle("Weather Station");
 		frmWeatherStation.setIconImage(
-				Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/imgs/weatherStationIcon.png")));
+		Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/images/weatherStationIcon.png")));
 		frmWeatherStation.getContentPane().setBackground(new Color(0, 0, 0));
 		frmWeatherStation.getContentPane().setLayout(null);
-
-		// TODO
-		URL url = GUI.class.getResource("/imgs/piLogoGreen.png");
-		ImageIcon icon = new ImageIcon(url);
-		Image scaledImage = icon.getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT);
-		ImageIcon resizedIcon = new ImageIcon(scaledImage);
 
 		JLabel lblImage = new JLabel("");
 		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 		lblImage.setBackground(Color.GREEN);
-		lblImage.setForeground(Color.GREEN);
 		lblImage.setBounds(1237, 1037, 135, 168);
-		lblImage.setIcon(new ImageIcon(GUI.class.getResource("/imgs/piLogoGreen.png")));
+		lblImage.setIcon(new ImageIcon(GUI.class.getResource("/images/piLogoGreen.png")));
 		frmWeatherStation.getContentPane().add(lblImage);
 
 		JLabel lblWind = new JLabel("WIND");
@@ -274,7 +265,7 @@ public class GUI
 		menuBar.add(mnFile);
 
 		JMenuItem mntmOpen = new JMenuItem("Open");
-		mntmOpen.setIcon(new ImageIcon(GUI.class.getResource("/imgs/open_black_icon.png")));
+		mntmOpen.setIcon(new ImageIcon(GUI.class.getResource("/images/open_black_icon.png")));
 		mntmOpen.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmOpen.setFont(new Font("Noto Sans", Font.PLAIN, 30));
 		mnFile.add(mntmOpen);
@@ -283,7 +274,7 @@ public class GUI
 		mnFile.add(separator);
 
 		JMenuItem mntmSave = new JMenuItem("Save");
-		mntmSave.setIcon(new ImageIcon(GUI.class.getResource("/imgs/save_black_icon.png")));
+		mntmSave.setIcon(new ImageIcon(GUI.class.getResource("/images/save_black_icon.png")));
 		mntmSave.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmSave.setFont(new Font("Noto Sans", Font.PLAIN, 30));
 		mnFile.add(mntmSave);
@@ -299,7 +290,7 @@ public class GUI
 				System.exit(0);
 			}
 		});
-		mntmExit.setIcon(new ImageIcon(GUI.class.getResource("/imgs/close_red_icon.png")));
+		mntmExit.setIcon(new ImageIcon(GUI.class.getResource("/images/close_red_icon.png")));
 		mntmExit.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmExit.setFont(new Font("Noto Sans", Font.PLAIN, 30));
 		mnFile.add(mntmExit);
@@ -309,7 +300,7 @@ public class GUI
 		menuBar.add(mnHelp);
 
 		JMenuItem mntmAbout = new JMenuItem("About");
-		mntmAbout.setIcon(new ImageIcon(GUI.class.getResource("/imgs/about_black_icon.png")));
+		mntmAbout.setIcon(new ImageIcon(GUI.class.getResource("/images/about_black_icon.png")));
 		mntmAbout.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmAbout.setFont(new Font("Noto Sans", Font.PLAIN, 30));
 		mnHelp.add(mntmAbout);
