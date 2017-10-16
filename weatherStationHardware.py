@@ -5,9 +5,9 @@
 #DHT library from Adafruit for the temperature and humidity sensor
 
 import spidev
-import time
 import os
 import Adafruit_DHT
+from datetime import datetime
 
 dht = Adafruit_DHT.AM2302
 
@@ -27,8 +27,12 @@ def GetRainfall():
 	rRef = ReadChannel(2)
 	# Calculates the resistance of the ETape water strip
 	# Vout = (R2 * Vin) / (R1+R2)
-	rainfall = (rainfall * 470) / (1023 - rainfall)
-	rRef = (rRef * 470) / (1023 - rRef)
+	try:
+		rainfall = (rainfall * 330) / (1023 - rainfall)
+		rRef = (rRef * 330) / (1023 - rRef)
+	except ZeroDivisionError:
+		rainfall = 0
+		rRef = 0
 	return rainfall, rRef
 	
 def GetTempHumid():
@@ -40,8 +44,9 @@ def GetTempHumid():
 	if temp is None:
 		temp = -1
 		
-	# Returns humidity in percentage and temp in Celsius 
-	return humid, temp
+	# Returns humidity in percentage and temp in Celsius
+	 
+	return humid, round(temp, 2)
 	
 def GetWindSpeed():
 	speed = ReadChannel(0)
@@ -50,7 +55,7 @@ def GetWindSpeed():
 	# Use voltage to determine speed
 	# voltage/meters per second ratio: 
 	# 0.47V = 0 m/s -- 2V = 32.4 m/s 	
-	speed = ((voltage - 0.47) * 16.2)
+	speed = ((voltage - initial) * 16.2)
 	#Disregard voltage if not necessary 
 	#Returns speed in meters per second
 	return round(speed, 2), round(voltage, 2)
@@ -63,32 +68,55 @@ def SpeedToMPH(speed):
 	return round(speed, 2)
 	
 def TempToFahrenheit(temp):
+	if(temp == - 1):
+		return -1
 	temp = ((temp * 9) / 5) + 32
 	return round(temp, 2)
 
 def RainfallToInches(rainfall, rRef):
-	rainfall = (rainfall - previous) / float(150)
+	rainfall = (rRef - rainfall) / float(100)
 	rainfall = round(rainfall, 2)
 	return rainfall
 	
 def RainfallToCentimeters(rainfall, rRef):
-	rainfall = (rainfall - previous) / float(60)
+	rainfall = (rRef - rainfall) / float(45)
 	rainfall = round(rainfall, 2)
 	return rainfall
 	
-delay = 6
-
-while True:
-
-	#Read in data
-	humid, temp = GetTempHumid()
-	speed, voltage = GetWindSpeed()
-	rainfall, rRef = GetRainfall()
+#def WriteDataOut(humid, temp, speed, rainfall, tempc, tempf):
+	#CODE HERE
 	
-	#Example print
-	print "----------------------"
-	print("Speed: {} ({}V)".format(speed,voltage))
-	print("Temp: {} Humidity {}".format(round(temp, 2), round(humid, 2)))
-	print("Rainfall {} - {}".format(rainfall, rRef))
+initial = .48
+temps_fahren = []
+temps_celsi = []
+speeds = []
+humidities = []
+rainfall_inches = []
+rainfall_centi = []
+
+while True:	
+
+	if datetime.now().minute % 10 == 0:
+		humid = sum(humidities) / float(len(humidities))
+		tempf = sum(temps_fahren) / float(len(temps_fahren))
+		temp = sum(temps_celsi) / float(len(temps_celsi))
+		speed = sum(speeds) / float(len(speeds))
+		rainfall_in = sum(rainfall_inches) / float(len(rainfall_inches))
+		rainfall_ce = sum(rainfall_centi) / float(len(rainfall_centi))
+		
+		#Write data to file
 	
-	time.sleep(delay)
+	if datetime.now().second % 10 == 0:	
+		humid, temp = GetTempHumid()
+		speed, voltage = GetWindSpeed()
+		rainfall, rRef = GetRainfall()
+	
+		temps_fahren.append(TempToFahrenheit(temp))
+		temps_celsi.append(temp)
+		speeds.append(speed)
+		humidities.append(humid)
+		rainfall_inches.append(RainfallToInches(rainfall, rRef))
+		rainfall_centi.append(RainfallToCentimeters(rainfall, rRef))
+		
+		print(temps_celsi)
+
