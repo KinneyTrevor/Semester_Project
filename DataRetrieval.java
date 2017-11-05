@@ -1,34 +1,12 @@
 package Semester_Project;
 
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Scanner;
-
-import java.awt.Desktop;
-import java.net.URI;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 public class DataRetrieval {
 
-    private void getDataOld(){
-        if(Desktop.isDesktopSupported()){
-            try{
-                Desktop.getDesktop().browse(new URI("https://docs.google.com/document/d/16veLFPwHKZQUU59-TnRtfB0cFoxjOGq3mlP1C9xOIoA/export?format=doc"));
-            }
-            catch(java.net.URISyntaxException b){
-                System.out.println("oof");
-            }
-            catch(java.io.IOException c){
-                System.out.println("ouch");
-            }
-        }
-    }
-
-    private void getData(){
+    private Connection establishConnection(){
         //String url = "jdbc:mysql://raspy.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
         String url = "jdbc:mysql://raspystudent.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
         String userName = "raspystudent";
@@ -45,19 +23,23 @@ public class DataRetrieval {
         }
         catch(Exception e){
             System.out.println(e);
+            System.out.println("Oops something went wrong when trying to connect to the database");
 
         }
+        return conn;
+    }
+
+    // TODO
+    private void updateDB(Connection conn, java.sql.Date date, java.sql.Time time, double temperature, double rainInches, double windSpeed, int humidityPercent){
+
+
+        Statement stmt = null;
 
         System.out.println("Creating table in given database...");
         try{
             stmt = conn.createStatement();
 
-            String sql = "CREATE TABLE REGISTRATION " +
-                    "(id INTEGER not NULL, " +
-                    " first VARCHAR(255), " +
-                    " last VARCHAR(255), " +
-                    " age INTEGER, " +
-                    " PRIMARY KEY ( id ))";
+            String sql = "";
 
             stmt.executeUpdate(sql);
         }
@@ -74,6 +56,7 @@ public class DataRetrieval {
                 }
             }
             catch(SQLException e){
+                System.out.println("Something went wrong in SQL");
                 //
             }
 
@@ -83,6 +66,7 @@ public class DataRetrieval {
                 }
             }
             catch(SQLException e){
+                System.out.println("Something went wrong in SQL");
                 //
             }
         }
@@ -91,24 +75,54 @@ public class DataRetrieval {
 
     }
 
-    private void createTable(){
+    private static Date stringToSQLDate(String string){
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+        java.sql.Date sqlDate = null;
+
+        try{
+            java.util.Date date = format.parse(string);
+            sqlDate = new Date(date.getTime());
 
 
+        }
+        catch(Exception e){
+            System.out.println("Mr Parse no here");
+        }
+        return sqlDate;
     }
 
-    private void dropTable(){
+    private static Time stringToSQLTime(String string){
+        java.sql.Time sqlTime = null;
 
-    }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm:ss");
 
-    // Read data in from file
-    private void readData(){
 
+        try{
+            java.util.Date time = simpleDateFormat.parse(string);
+            sqlTime = new Time(time.getTime());
+        }
+        catch(Exception e){
+            System.out.println("I don't know you, that's my parse!");
+        }
+
+
+        return sqlTime;
     }
 
     public static void main(String[] args){
-        DataRetrieval bob = new DataRetrieval();
-        bob.getData();
+        //DataRetrieval bob = new DataRetrieval();
+        //Connection connection = bob.establishConnection();
+
 
     }
 
 }
+
+
+// unit tests
+//        System.out.println("input: " + boar);
+//        System.out.println("output: " + stringToSQLDate(boar));
+
+//        String time = "03:40:33";
+//        System.out.println("input: " + time);
+//        System.out.println("output: " + stringToSQLTime(time));
