@@ -18,6 +18,8 @@ public class RaspiCalendar {
 
 	private static final int WIDTH = 1300;
 	private static final int HEIGHT = 650;
+	private static TIMESOFDAY timeofday;
+	private static String query;
 
 	private static JFrame raspiRevolutionaries = new JFrame();
 	
@@ -25,7 +27,7 @@ public class RaspiCalendar {
 		calendarSetup();
 		controlSetup();
 		
-		raspiRevolutionaries.setTitle("Raspi Revolutionaries");
+		raspiRevolutionaries.setTitle("Raspi Revolutionaries Calendar");
 		raspiRevolutionaries.getContentPane().setLayout(new FlowLayout());
 		raspiRevolutionaries.getContentPane().setBackground(Color.BLACK);
 		raspiRevolutionaries.setSize(WIDTH, HEIGHT);
@@ -44,7 +46,6 @@ public class RaspiCalendar {
 		calendarPane.setLayout(new BoxLayout(calendarPane, BoxLayout.PAGE_AXIS));
 
 		calendarNavi.setBackground(Color.BLACK);
-
 		calendarView.setBackground(Color.BLACK);
 		
 		calendarNavi.getPrevButton().addActionListener(new ActionListener(){
@@ -59,7 +60,8 @@ public class RaspiCalendar {
 		});
 		calendarNavi.getViewButton().addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0){
-				System.out.println(calendar.get(5));
+				query = calendar.get(1) + "/" + (calendar.get(2) + 1) + "/" + calendar.get(5);
+				System.out.println(query);
 			}
 		});
 		
@@ -94,6 +96,63 @@ public class RaspiCalendar {
 		night.setForeground(Color.green);
 		night.setBackground(Color.BLACK);
 		
+		morning.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(afternoon.isSelected()){
+					afternoon.setSelected(false);
+					evening.setSelected(false);
+					night.setSelected(false);
+					timeofday = TIMESOFDAY.MORNING;
+				}
+		
+			}
+			
+		});
+		afternoon.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(afternoon.isSelected()){
+					morning.setSelected(false);
+					evening.setSelected(false);
+					night.setSelected(false);
+					timeofday = TIMESOFDAY.AFTERNOON;
+				}
+		
+			}
+			
+		});
+		evening.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(afternoon.isSelected()){
+					afternoon.setSelected(false);
+					morning.setSelected(false);
+					night.setSelected(false);
+					timeofday = TIMESOFDAY.EVENING;
+				}
+		
+			}
+			
+		});
+		night.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(afternoon.isSelected()){
+					afternoon.setSelected(false);
+					evening.setSelected(false);
+					morning.setSelected(false);
+					timeofday = TIMESOFDAY.NIGHT;
+				}
+		
+			}
+			
+		});
+				
 		JLabel logo = new JLabel();
 		logo.setIcon(new ImageIcon(RaspiCalendar.class.getResource("/images/piLogoGreenXS.png")));
 		logo.setBackground(Color.green);

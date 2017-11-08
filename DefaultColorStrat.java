@@ -9,23 +9,23 @@ public class DefaultColorStrat implements ButtonColorStrat
 {
   public void color(JButton button, int date, GregorianCalendar cal, boolean selected)
   {
-	button.setForeground(Color.green);
+	button.setForeground(Color.BLACK);
 	//If date has data--
 	//	if (cal.getEventsOnDate(date, cal.get(2), cal.get(1)).size() > 0) {
 //	   button.setBackground(Color.green);
 //	   button.setForeground(Color.black);
 //	}
-    button.setBackground(selected ? Color.WHITE : null);
+    button.setBackground(selected ? Color.green : Color.BLACK);
   }
   
   public void color(JButton button, int date, GregorianCalendar cal, boolean selected, Color bgColor)
   {
-	button.setForeground(Color.green);
+	button.setForeground(selected ? Color.BLACK : Color.green);
 	//If date has data--
 //    if () {
 //      button.setBackground(Color.green);
 //      button.setForeground(Color.black);
 //    }
-    button.setBackground(selected ? Color.WHITE : bgColor);
+    button.setBackground(selected ? Color.green : bgColor);
   }
 }
