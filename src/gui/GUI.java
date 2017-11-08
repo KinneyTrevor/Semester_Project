@@ -23,7 +23,7 @@ import java.awt.event.ActionEvent;
  * 
  * @author Frederick Javalera
  */
-public class fredsGUI
+public class GUI
 {
 	// fields
 	private JFrame frmWeatherStation;
@@ -39,7 +39,7 @@ public class fredsGUI
 			{
 				try
 				{
-					fredsGUI window = new fredsGUI();
+					GUI window = new GUI();
 					window.frmWeatherStation.setVisible(true);
 				} catch (Exception e)
 				{
@@ -52,7 +52,7 @@ public class fredsGUI
 	/**
 	 * Create the application.
 	 */
-	public fredsGUI()
+	public GUI()
 	{
 		initialize();
 	}
@@ -67,10 +67,10 @@ public class fredsGUI
 		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		try
 		{
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fredsGUI.class.getResourceAsStream("/fonts/digital-7Mono.ttf")));
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fredsGUI.class.getResourceAsStream("/fonts/digital-7Italic.ttf")));
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fredsGUI.class.getResourceAsStream("/fonts/FUTURISM.TTF")));
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fredsGUI.class.getResourceAsStream("/fonts/NotoSans.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, GUI.class.getResourceAsStream("/fonts/digital-7Mono.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, GUI.class.getResourceAsStream("/fonts/digital-7Italic.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, GUI.class.getResourceAsStream("/fonts/FUTURISM.TTF")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, GUI.class.getResourceAsStream("/fonts/NotoSans.ttf")));
 		} catch (FontFormatException e)
 		{
 			// TODO Auto-generated catch block
@@ -91,7 +91,7 @@ public class fredsGUI
 		frmWeatherStation = new JFrame();
 		frmWeatherStation.setTitle("Weather Station");
 		frmWeatherStation.setIconImage(
-				Toolkit.getDefaultToolkit().getImage(fredsGUI.class.getResource("/images/weatherStationIcon.png")));
+				Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/images/weatherStationIcon.png")));
 		frmWeatherStation.getContentPane().setBackground(new Color(0, 0, 0));
 		frmWeatherStation.getContentPane().setLayout(null);
 
@@ -99,7 +99,7 @@ public class fredsGUI
 		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
 		lblImage.setBackground(Color.GREEN);
 		lblImage.setBounds(587, 522, 135, 167);
-		lblImage.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/piLogoGreen.png")));
+		lblImage.setIcon(new ImageIcon(GUI.class.getResource("/images/piLogoGreen.png")));
 		frmWeatherStation.getContentPane().add(lblImage);
 
 		JLabel lblWind = new JLabel("WIND");
@@ -278,7 +278,7 @@ public class fredsGUI
 		menuBar.add(mnFile);
 
 		JMenuItem mntmOpen = new JMenuItem("Open");
-		mntmOpen.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/open_black_icon.png")));
+		mntmOpen.setIcon(new ImageIcon(GUI.class.getResource("/images/open_black_icon.png")));
 		mntmOpen.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmOpen.setFont(new Font("notoSans", Font.PLAIN, 18));
 		mnFile.add(mntmOpen);
@@ -287,7 +287,7 @@ public class fredsGUI
 		mnFile.add(separator);
 
 		JMenuItem mntmSave = new JMenuItem("Save");
-		mntmSave.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/save_black_icon.png")));
+		mntmSave.setIcon(new ImageIcon(GUI.class.getResource("/images/save_black_icon.png")));
 		mntmSave.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmSave.setFont(new Font("notoSans", Font.PLAIN, 18));
 		mnFile.add(mntmSave);
@@ -303,7 +303,7 @@ public class fredsGUI
 				System.exit(0);
 			}
 		});
-		mntmExit.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/close_red_icon.png")));
+		mntmExit.setIcon(new ImageIcon(GUI.class.getResource("/images/close_red_icon.png")));
 		mntmExit.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmExit.setFont(new Font("notoSans", Font.PLAIN, 18));
 		mnFile.add(mntmExit);
@@ -313,7 +313,7 @@ public class fredsGUI
 		menuBar.add(mnHelp);
 
 		JMenuItem mntmAbout = new JMenuItem("About");
-		mntmAbout.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/about_black_icon.png")));
+		mntmAbout.setIcon(new ImageIcon(GUI.class.getResource("/images/about_black_icon.png")));
 		mntmAbout.setHorizontalAlignment(SwingConstants.LEFT);
 		mntmAbout.setFont(new Font("notoSans", Font.PLAIN, 18));
 		mnHelp.add(mntmAbout);
