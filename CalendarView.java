@@ -132,6 +132,7 @@ public class CalendarView
     {
       JButton dummyButton = new JButton("");
       dummyButton.setEnabled(false);
+      dummyButton.setBackground(Color.BLACK);
       calDays.add(dummyButton);j++;
     }
     
