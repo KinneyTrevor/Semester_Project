@@ -1,4 +1,4 @@
-package gui;
+package Semester_Project;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -29,23 +29,34 @@ public class DataRetrieval {
         return conn;
     }
 
-    // TODO
-    private void updateDB(Connection conn, java.sql.Date date, java.sql.Time time, double temperature, double rainInches, double windSpeed, int humidityPercent){
+    // TODO - test me
+    private void updateDB(Connection conn, java.sql.Date inputDate, java.sql.Time inputTime,
+                          double temperature, double rainInches, double windSpeed, int humidityPercent){
 
 
         Statement stmt = null;
 
-        System.out.println("Creating table in given database...");
         try{
             stmt = conn.createStatement();
 
-            String sql = "";
+//            String sql = "insert into raspystudent.WEATHER(Date, Time, Temp, Rainfall, Wind,Humidity) " +
+//                         "values(date,time,Temp,Rainfall,Wind,Humidity)";
 
-            stmt.executeUpdate(sql);
+            PreparedStatement pst = conn.prepareStatement("insert into WEATHER(Date, Time, Temp, Rainfall, Wind,Humidity) values(?,?,?,?,?,?)");
+            pst.setDate(1,inputDate);
+            pst.setTime(2,inputTime);
+            pst.setDouble(3,temperature);
+            pst.setDouble(4,rainInches);
+            pst.setDouble(5,windSpeed);
+            pst.setDouble(6,humidityPercent);
+            pst.execute();
+            pst.close();
+
+            //stmt.executeUpdate(sql);
         }
 
         catch(SQLException e){
-            System.out.println("Shits fucked");
+            System.out.println("SQL Exception: " + e);
         }
 
         finally{
@@ -56,7 +67,7 @@ public class DataRetrieval {
                 }
             }
             catch(SQLException e){
-                System.out.println("Something went wrong in SQL");
+                System.out.println("SQL Exception: " + e);
                 //
             }
 
@@ -66,15 +77,20 @@ public class DataRetrieval {
                 }
             }
             catch(SQLException e){
-                System.out.println("Something went wrong in SQL");
+                System.out.println("SQL Exception: " + e);
                 //
             }
         }
-        System.out.println("We worked fam");
 
 
     }
 
+
+    // TODO - write me
+
+    private void readDB(Connection conn){
+
+    }
     private static Date stringToSQLDate(String string){
         SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
         java.sql.Date sqlDate = null;
@@ -86,7 +102,7 @@ public class DataRetrieval {
 
         }
         catch(Exception e){
-            System.out.println("Mr Parse no here");
+            System.out.println("Error parsing date string: " + e);
         }
         return sqlDate;
     }
@@ -102,7 +118,7 @@ public class DataRetrieval {
             sqlTime = new Time(time.getTime());
         }
         catch(Exception e){
-            System.out.println("I don't know you, that's my parse!");
+            System.out.println("Error parsing time string: " + e);
         }
 
 
@@ -110,9 +126,13 @@ public class DataRetrieval {
     }
 
     public static void main(String[] args){
-        //DataRetrieval bob = new DataRetrieval();
-        //Connection connection = bob.establishConnection();
+        DataRetrieval bob = new DataRetrieval();
+        Connection connection = bob.establishConnection();
 
+        java.sql.Date myDate = stringToSQLDate("01-01-2011");
+        java.sql.Time myTime = stringToSQLTime("07:34:33");
+
+        bob.updateDB(connection,myDate,myTime,4,3,2,4);
 
     }
 
