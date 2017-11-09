@@ -1,4 +1,4 @@
-package gui;
+package Semester_Project
 
 import java.awt.EventQueue;
 import javax.swing.ImageIcon;
