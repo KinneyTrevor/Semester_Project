@@ -126,6 +126,8 @@ public class DataRetrieval {
     }
 
     public static void main(String[] args){
+        
+        // Unit Testing
         DataRetrieval bob = new DataRetrieval();
         Connection connection = bob.establishConnection();
 
@@ -137,12 +139,3 @@ public class DataRetrieval {
     }
 
 }
-
-
-// unit tests
-//        System.out.println("input: " + boar);
-//        System.out.println("output: " + stringToSQLDate(boar));
-
-//        String time = "03:40:33";
-//        System.out.println("input: " + time);
-//        System.out.println("output: " + stringToSQLTime(time));
