@@ -1,19 +1,19 @@
 Date(MM-DD-YYYY)
 Time
-Temp(Degrees)
-Rainfall(inches)
-Wind(MPH)
+Temp
+Rainfall
+Wind
 Humidity
 
 CSV file example
 
 MM/DD/YYYY
-HH:MM, temp C, temp F, humidity, wind MPH, wind MPS, rainfall inch, rainfall centi
+HH:MM, temp, humidity, wind, rainfall
 ...
 ...
 ...
 ...
 MM/DD/YYYY
-HH:MM, temp C, temp F, humidity, wind MPH, wind MPS, rainfall inch, rainfall centi
+HH:MM, temp, humidity, wind, rainfall
 ...
 ...
