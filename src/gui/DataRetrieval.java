@@ -142,6 +142,20 @@ public class DataRetrieval {
         return sqlTime;
     }
 
+    private void deleteAll(Connection conn){
+        Statement stmt = null;
+
+        try {
+            stmt = conn.createStatement();
+            PreparedStatement pst = conn.prepareStatement("TRUNCATE WEATHER");
+
+
+        }
+        catch(SQLException e){
+
+        }
+    }
+
     public static void main(String[] args){
 
         long startTime = System.currentTimeMillis();
@@ -153,7 +167,10 @@ public class DataRetrieval {
         java.sql.Date myDate = stringToSQLDate("01-01-2011");
         java.sql.Time myTime = stringToSQLTime("07:34:33");
 
-        bob.updateDB(connection,myDate,myTime,4,3,2,1,9);
+        bob.deleteAll(connection);
+
+
+        bob.updateDB(connection,myDate,myTime,4,3,2,1,2);
 
 
 
@@ -171,9 +188,13 @@ public class DataRetrieval {
             //
         }
 
+        bob.deleteAll(connection);
+
         long endTime = System.currentTimeMillis();
         float elapse = ((endTime-startTime)/1000);
-        System.out.println("That took " + elapse + " seconds");
+        System.out.println("That took like " + elapse + " seconds");
+
+
 
     }
 
