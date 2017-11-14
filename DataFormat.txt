@@ -1,0 +1,19 @@
+Date(MM-DD-YYYY)
+Time
+Temp
+Rainfall
+Wind
+Humidity
+
+CSV file example
+
+MM/DD/YYYY
+HH:MM, temp, humidity, wind, rainfall
+...
+...
+...
+...
+MM/DD/YYYY
+HH:MM, temp, humidity, wind, rainfall
+...
+...

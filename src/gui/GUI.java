@@ -12,11 +12,14 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JLabel;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import javax.swing.JButton;
 
 /**
  * 
@@ -94,6 +97,19 @@ public class GUI
 				Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/images/weatherStationIcon.png")));
 		frmWeatherStation.getContentPane().setBackground(new Color(0, 0, 0));
 		frmWeatherStation.getContentPane().setLayout(null);
+		Dimension screenSize = frmWeatherStation.getSize();
+		frmWeatherStation.setSize(screenSize);
+		
+		JButton btnHistoricalData = new JButton("");
+		btnHistoricalData.setToolTipText("Opens a calendar in which you can get historical data by date.");
+		btnHistoricalData.setSelectedIcon(new ImageIcon(GUI.class.getResource("/images/historicalDataButton.png")));
+		btnHistoricalData.setIcon(new ImageIcon(GUI.class.getResource("/images/historicalDataButton.png")));
+		btnHistoricalData.setForeground(Color.BLACK);
+		btnHistoricalData.setBackground(Color.BLACK);
+		btnHistoricalData.setFont(new Font("notoSans", Font.PLAIN, 21));
+		btnHistoricalData.setBounds(484, 416, 224, 70);
+		btnHistoricalData.setBorderPainted(false);
+		frmWeatherStation.getContentPane().add(btnHistoricalData);
 
 		JLabel lblImage = new JLabel("");
 		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
@@ -110,7 +126,7 @@ public class GUI
 
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setForeground(new Color(0, 255, 0));
-		separator_2.setBounds(22, 14, 754, 7);
+		separator_2.setBounds(22, 21, 754, 2);
 		frmWeatherStation.getContentPane().add(separator_2);
 
 		JLabel label = new JLabel("000.0");
@@ -225,11 +241,6 @@ public class GUI
 		label_4.setBounds(22, 602, 191, 98);
 		frmWeatherStation.getContentPane().add(label_4);
 
-		JSeparator separator_6 = new JSeparator();
-		separator_6.setForeground(Color.GREEN);
-		separator_6.setBounds(22, 1124, 225, 7);
-		frmWeatherStation.getContentPane().add(separator_6);
-
 		JLabel label_5 = new JLabel("00/00/00");
 		label_5.setHorizontalAlignment(SwingConstants.RIGHT);
 		label_5.setFont(digital7Mono);
@@ -237,10 +248,10 @@ public class GUI
 		label_5.setBounds(317, 62, 459, 98);
 		frmWeatherStation.getContentPane().add(label_5);
 
-		JSeparator separator_7 = new JSeparator();
-		separator_7.setForeground(Color.GREEN);
-		separator_7.setBounds(418, 375, 358, 7);
-		frmWeatherStation.getContentPane().add(separator_7);
+		JSeparator separator_6 = new JSeparator();
+		separator_6.setForeground(Color.GREEN);
+		separator_6.setBounds(418, 375, 358, 7);
+		frmWeatherStation.getContentPane().add(separator_6);
 
 		JLabel lblNewLabel_4 = new JLabel("00:00:00");
 		lblNewLabel_4.setFont(digital7Mono);
@@ -249,10 +260,10 @@ public class GUI
 		lblNewLabel_4.setBounds(336, 243, 440, 98);
 		frmWeatherStation.getContentPane().add(lblNewLabel_4);
 
-		JSeparator separator_8 = new JSeparator();
-		separator_8.setForeground(Color.GREEN);
-		separator_8.setBounds(418, 195, 358, 7);
-		frmWeatherStation.getContentPane().add(separator_8);
+		JSeparator separator_7 = new JSeparator();
+		separator_7.setForeground(Color.GREEN);
+		separator_7.setBounds(418, 195, 358, 7);
+		frmWeatherStation.getContentPane().add(separator_7);
 
 		JLabel lblRaspi = new JLabel("RasPi");
 		lblRaspi.setFont(futurism);
@@ -265,6 +276,10 @@ public class GUI
 		lblRevolutionaries.setForeground(Color.GREEN);
 		lblRevolutionaries.setBounds(366, 649, 440, 107);
 		frmWeatherStation.getContentPane().add(lblRevolutionaries);
+		
+		JSeparator separator_8 = new JSeparator();
+		separator_8.setBounds(22, 767, 755, 2);
+		frmWeatherStation.getContentPane().add(separator_8);
 
 		frmWeatherStation.setBounds(0, 0, 825, 900);
 		frmWeatherStation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
