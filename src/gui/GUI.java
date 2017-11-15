@@ -1,4 +1,4 @@
-package gui;
+package proto;
 
 import java.awt.EventQueue;
 import javax.swing.ImageIcon;
