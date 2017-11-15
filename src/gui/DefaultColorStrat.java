@@ -1,4 +1,4 @@
-package gui;
+package proto;
 
 import java.awt.Color;
 import java.util.GregorianCalendar;

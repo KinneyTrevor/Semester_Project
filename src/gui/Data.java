@@ -1,4 +1,4 @@
-package gui;
+package proto;
 
 public class Data {
 
@@ -28,12 +28,12 @@ public class Data {
 
 	//Temps
 	public double getAverTempC() {
-		//Place holder
+		//Palce holder
 		return ArrayAverage(temp);
 	}
 	
 	public double getAverTempF(){
-		//Place holder
+		//Palce holder
 		return (ArrayAverage(temp) * (9/5.0)) + 32;
 	}
 	

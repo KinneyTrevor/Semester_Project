@@ -1,4 +1,4 @@
-package MySQLcon;
+package proto;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -33,7 +33,7 @@ public class DataRetrieval {
         return conn;
     }
 
-
+    // TODO - test me
     private void updateDB(Connection conn, java.sql.Date inputDate, java.sql.Time inputTime,
                           double temperature, double rainInches, double windSpeed, int humidityPercent,int ID){
 
@@ -56,7 +56,7 @@ public class DataRetrieval {
             pst.setDouble(6,humidityPercent);
             pst.setInt(7,ID);
             pst.execute();
-            //pst.close();
+            pst.close();
 
             //stmt.executeUpdate(sql);
         }
@@ -65,28 +65,28 @@ public class DataRetrieval {
             System.out.println("SQL Exception: " + e);
         }
 
-//        finally{
-//            // Close resources
-//            try{
-//                if(stmt!=null){
-//                    conn.close();
-//                }
-//            }
-//            catch(SQLException e){
-//                System.out.println("SQL Exception: " + e);
-//                //
-//            }
-//
-//            try{
-//                if(conn!= null){
-//                    conn.close();
-//                }
-//            }
-//            catch(SQLException e){
-//                System.out.println("SQL Exception: " + e);
-//                //
-//            }
-//        }
+        finally{
+            // Close resources
+            try{
+                if(stmt!=null){
+                    conn.close();
+                }
+            }
+            catch(SQLException e){
+                System.out.println("SQL Exception: " + e);
+                //
+            }
+
+            try{
+                if(conn!= null){
+                    conn.close();
+                }
+            }
+            catch(SQLException e){
+                System.out.println("SQL Exception: " + e);
+                //
+            }
+        }
 
 
     }
@@ -148,7 +148,6 @@ public class DataRetrieval {
         try {
             stmt = conn.createStatement();
             PreparedStatement pst = conn.prepareStatement("TRUNCATE WEATHER");
-            pst.execute();
 
 
         }
@@ -165,43 +164,36 @@ public class DataRetrieval {
         DataRetrieval bob = new DataRetrieval();
         Connection connection = bob.establishConnection();
 
-        bob.deleteAll(connection);
-
         java.sql.Date myDate = stringToSQLDate("01-01-2011");
         java.sql.Time myTime = stringToSQLTime("07:34:33");
 
+        bob.deleteAll(connection);
 
 
-        bob.updateDB(connection,myDate,myTime,4,3,2,1,50);
+        bob.updateDB(connection,myDate,myTime,4,3,2,1,2);
 
-        ResultSet rs = null;
+
 
 
 //        // TODO - Turn me into a method
         try{
-            rs = getWeather(connection);
+            ResultSet rs = getWeather(connection);
             while(rs.next()){
-                System.out.println("Date: " + rs.getString(1) + " \nTime: " + rs.getString(2) + " \nTemp: "
-                        + rs.getString(3) + " \nRain: " + rs.getString(4) + " \nWind: " +
-                        rs.getString(5) + " \nHumidity: " + rs.getString(6));
+                System.out.println(rs.getString(0) + " " + rs.getString(1) + " "
+                        + rs.getString(2) + " " + rs.getString(3) + " " +
+                        rs.getString(4) + " " + rs.getString(5));
             }
         }
         catch(Exception e){
-            System.out.println(e);
+            //
         }
 
+        bob.deleteAll(connection);
 
-
-
-
-
+        long endTime = System.currentTimeMillis();
+        float elapse = ((endTime-startTime)/1000);
+        System.out.println("That took like " + elapse + " seconds");
     }
 
 
 }
-
-
-//
-//    long endTime = System.currentTimeMillis();
-//    float elapse = ((endTime-startTime)/1000);
-//        System.out.println("That took like " + elapse + " seconds");
