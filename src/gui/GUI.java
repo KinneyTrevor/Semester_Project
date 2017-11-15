@@ -196,10 +196,10 @@ public class GUI
 		label_2.setBounds(22, 423, 131, 98);
 		frmWeatherStation.getContentPane().add(label_2);
 
-		JLabel lblNewLabel_1 = new JLabel("FT");
+		JLabel lblNewLabel_1 = new JLabel("CM");
 		lblNewLabel_1.setForeground(Color.GREEN);
 		lblNewLabel_1.setFont(notoSans);
-		lblNewLabel_1.setBounds(53, 515, 33, 42);
+		lblNewLabel_1.setBounds(53, 515, 53, 42);
 		frmWeatherStation.getContentPane().add(lblNewLabel_1);
 
 		JLabel lblNewLabel_2 = new JLabel("00");
