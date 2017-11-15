@@ -1,0 +1,27 @@
+import java.awt.Color;
+import java.util.ArrayList;
+import javax.swing.JButton;
+
+public class DefaultColorStrat
+  implements ButtonColorStrat
+{
+  public void color(JButton button, int date, CalendarWithEvents cal, boolean selected)
+  {
+    if (cal.getEventsOnDate(date, cal.get(2), cal.get(1)).size() > 0) {
+      button.setForeground(Color.WHITE);
+    } else {
+      button.setForeground(Color.BLACK);
+    }
+    button.setBackground(selected ? Color.WHITE : null);
+  }
+  
+  public void color(JButton button, int date, CalendarWithEvents cal, boolean selected, Color bgColor)
+  {
+    if (cal.getEventsOnDate(date, cal.get(2), cal.get(1)).size() > 0) {
+      button.setForeground(Color.WHITE);
+    } else {
+      button.setForeground(Color.BLACK);
+    }
+    button.setBackground(selected ? Color.WHITE : bgColor);
+  }
+}

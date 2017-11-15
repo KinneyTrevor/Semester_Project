@@ -1,0 +1,68 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+public class EventDisplayPanel
+  extends JPanel
+{
+  private CalendarWithEvents cal;
+  
+  public static enum FilterType
+  {
+    Day;
+  }
+  
+  private FilterType filter = FilterType.Day;
+  private int width;
+  private int height;
+  private JPanel eventView;
+  
+  public EventDisplayPanel(CalendarWithEvents c, int wd, int ht)
+  {
+    this.cal = c;
+    
+    this.eventView = new DayEventsView(c.getEventsToday(), wd, ht);
+    
+    setLayout(new BorderLayout());
+    add(this.eventView, "Center");
+    
+    this.cal.addChangeListener(new ChangeListener()
+    {
+      public void stateChanged(ChangeEvent e)
+      {
+        EventDisplayPanel.this.refreshView();
+      }
+    });
+    this.width = wd;
+    this.height = ht;
+    
+    setPreferredSize(new Dimension(this.width, this.height));
+    setMaximumSize(new Dimension(this.width, this.height));
+  }
+  
+  public void setFilterType(FilterType t)
+  {
+    this.filter = t;
+    refreshView();
+  }
+  
+  private void refreshView()
+  {
+    ArrayList<Event> eventList = new ArrayList();
+    removeAll();
+    if (this.filter == FilterType.Day)
+    {
+      eventList = this.cal.getEventsToday();
+      this.eventView = new DayEventsView(eventList, this.width, this.height);
+    }
+    setForeground(Color.WHITE);
+    setBackground(Color.BLACK);
+    add(this.eventView, "Center");
+    revalidate();
+    repaint();
+  }
+}

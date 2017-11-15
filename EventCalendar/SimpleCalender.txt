@@ -1,0 +1,110 @@
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class SimpleCalender
+{
+  private static final int WIDTH = 1050;
+  private static final int HEIGHT = 700;
+  private static ArrayList<Event> eventList = new ArrayList();
+  
+  public static void main(String[] args)
+  {
+    try
+    {
+      CalendarWithEvents.loadEvent();
+      eventList = CalendarWithEvents.getEvents();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+    CalendarWithEvents cal = new CalendarWithEvents();
+    
+    JFrame frmRaspieRevolutionaries = new JFrame();
+    frmRaspieRevolutionaries.setTitle("Raspie Revolutionaries");
+    frmRaspieRevolutionaries.getContentPane().setBackground(Color.BLACK);
+    frmRaspieRevolutionaries.setSize(1050, 700);
+    
+    frmRaspieRevolutionaries.getContentPane().setLayout(new FlowLayout());
+    
+    JPanel lPanel = new JPanel();
+    JPanel rPanel = new JPanel();
+    rPanel.setBackground(Color.BLACK);
+    
+    lPanel.setLayout(new BoxLayout(lPanel, 3));
+    CalNavigationPanel calPanel = new CalNavigationPanel();
+    calPanel.setBackground(Color.BLACK);
+    CalendarView calView = new CalendarView(cal, 500, 500);
+    calView.setBackground(Color.BLACK);
+    
+    calPanel.getPrevButton().addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent arg0)
+      {
+        SimpleCalender.this.prevDay();
+      }
+    });
+    calPanel.getNextButton().addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent arg0)
+      {
+        SimpleCalender.this.nextDay();
+      }
+    });
+    calPanel.getCreateButton().addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent arg0)
+      {
+        CreateEventDialog.DisplayDialog(SimpleCalender.this);
+      }
+    });
+    lPanel.add(calView);
+    lPanel.add(calPanel);
+    
+    rPanel.setLayout(new BoxLayout(rPanel, 3));
+    
+    JButton quitButton = new JButton("Close");
+    quitButton.addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent event)
+      {
+        try
+        {
+          PrintWriter writer = new PrintWriter("events.txt", "UTF-8");
+          for (Event e : SimpleCalender.eventList) {
+            writer.write(e.toString() + "\n");
+          }
+          writer.close();
+        }
+        catch (Exception e)
+        {
+          e.printStackTrace();
+        }
+        SimpleCalender.this.dispose();
+      }
+    });
+    rPanel.add(quitButton);
+    EventDisplayPanel eventDisplay = new EventDisplayPanel(cal, 500, 500);
+    eventDisplay.setVisible(true);
+    eventDisplay.setForeground(Color.WHITE);
+    eventDisplay.setBackground(Color.BLACK);
+    rPanel.add(eventDisplay);
+    
+    frmRaspieRevolutionaries.getContentPane().add(lPanel);
+    frmRaspieRevolutionaries.getContentPane().add(rPanel);
+    
+    frmRaspieRevolutionaries.setDefaultCloseOperation(3);
+    frmRaspieRevolutionaries.setVisible(true);
+    
+    frmRaspieRevolutionaries.pack();
+  }
+}

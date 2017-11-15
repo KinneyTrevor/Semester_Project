@@ -1,0 +1,9 @@
+import java.awt.Color;
+import javax.swing.JButton;
+
+public abstract interface ButtonColorStrat
+{
+  public abstract void color(JButton paramJButton, int paramInt, CalendarWithEvents paramCalendarWithEvents, boolean paramBoolean);
+  
+  public abstract void color(JButton paramJButton, int paramInt, CalendarWithEvents paramCalendarWithEvents, boolean paramBoolean, Color paramColor);
+}

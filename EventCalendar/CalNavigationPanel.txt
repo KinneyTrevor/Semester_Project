@@ -1,0 +1,49 @@
+import java.awt.Color;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+public class CalNavigationPanel
+  extends JPanel
+{
+  private JButton todayBtn;
+  private JButton createBtn;
+  private JButton nextBtn;
+  private JButton prevBtn;
+  
+  public CalNavigationPanel()
+  {
+    this.createBtn = new JButton("Create");
+    this.createBtn.setBackground(new Color(152, 141, 124));
+    this.createBtn.setForeground(Color.WHITE);
+    this.prevBtn = new JButton("<");
+    this.prevBtn.setBackground(new Color(152, 141, 124));
+    this.prevBtn.setForeground(Color.WHITE);
+    this.nextBtn = new JButton(">");
+    this.nextBtn.setBackground(new Color(152, 141, 124));
+    this.nextBtn.setForeground(Color.WHITE);
+    
+    add(this.prevBtn);
+    add(this.createBtn);
+    add(this.nextBtn);
+  }
+  
+  public JButton getNextButton()
+  {
+    return this.nextBtn;
+  }
+  
+  public JButton getCreateButton()
+  {
+    return this.createBtn;
+  }
+  
+  public JButton getTodayButton()
+  {
+    return this.todayBtn;
+  }
+  
+  public JButton getPrevButton()
+  {
+    return this.prevBtn;
+  }
+}

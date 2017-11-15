@@ -1,0 +1,35 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+public class DayEventsView
+  extends JPanel
+{
+  public DayEventsView(ArrayList<Event> events, int width, int height)
+  {
+    JTextArea textA = new JTextArea();
+    textA.setEditable(false);
+    display(events, textA);
+    add(textA, "Center");
+    setForeground(Color.BLUE);
+    setBackground(Color.black);
+    setForeground(Color.YELLOW);
+    setPreferredSize(new Dimension(width, height));
+    setMaximumSize(new Dimension(width, height));
+  }
+  
+  public void display(ArrayList<Event> eve, JTextArea textArea)
+  {
+    Collections.sort(eve, new EventComparator());
+    String display = "";
+    for (Event e : eve) {
+      display = 
+      
+        display + (e.getMonth() + 1) + "/" + e.getDay() + "/" + e.getYear() + "\t" + e.getStartTime() + ":" + e.getEndTime() + "\t" + e.getEventTitle() + "\n";
+    }
+    textArea.setText(display);
+  }
+}

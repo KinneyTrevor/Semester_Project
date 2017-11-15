@@ -1,0 +1,73 @@
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
+
+public class Event
+{
+  private Calendar cal;
+  private LocalTime startTime;
+  private LocalTime endTime;
+  private String eventTitle;
+  
+  Event(String eventTitle, Date date, LocalTime startTime, LocalTime endTime)
+    throws Exception
+  {
+    if (startTime.isAfter(endTime)) {
+      throw new Exception("Start time should be ahead of end time.");
+    }
+    this.cal = Calendar.getInstance();
+    this.cal.setTime(date);
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.eventTitle = eventTitle;
+  }
+  
+  public boolean equals(Object otherObject)
+  {
+    Event other = (Event)otherObject;
+    return (getEventTitle().equals(other.getEventTitle())) && (getYear() == other.getYear()) && 
+      (getMonth() == other.getMonth()) && (getDay() == other.getDay()) && 
+      (getStartTime().equals(other.getStartTime())) && (getEndTime().equals(other.getEndTime()));
+  }
+  
+  public int getYear()
+  {
+    return this.cal.get(1);
+  }
+  
+  public int getMonth()
+  {
+    return this.cal.get(2);
+  }
+  
+  public int getDay()
+  {
+    return this.cal.get(5);
+  }
+  
+  public int getDayOfWeek()
+  {
+    return this.cal.get(7);
+  }
+  
+  public LocalTime getStartTime()
+  {
+    return this.startTime;
+  }
+  
+  public LocalTime getEndTime()
+  {
+    return this.endTime;
+  }
+  
+  public String getEventTitle()
+  {
+    return this.eventTitle;
+  }
+  
+  public String toString()
+  {
+    String line = getEventTitle() + ";" + getYear() + ";" + getMonth() + ";" + getDay() + ";" + getStartTime() + ";" + getEndTime();
+    return line;
+  }
+}
