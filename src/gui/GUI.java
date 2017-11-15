@@ -76,11 +76,9 @@ public class GUI
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, GUI.class.getResourceAsStream("/fonts/NotoSans.ttf")));
 		} catch (FontFormatException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
