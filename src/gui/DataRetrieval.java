@@ -1,4 +1,5 @@
-package proto;
+package Semester_Project;
+//package MySQLCon;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -6,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 
 public class DataRetrieval {
+
     int ID= 0;
 
     private Connection establishConnection(){
@@ -33,14 +35,13 @@ public class DataRetrieval {
         return conn;
     }
 
-    // TODO - test me
-    private void updateDB(Connection conn, java.sql.Date inputDate, java.sql.Time inputTime,
-                          double temperature, double rainInches, double windSpeed, int humidityPercent,int ID){
 
+    private void updateDB(Connection conn, java.sql.Date inputDate, java.sql.Time inputTime,
+                          double temperature, double rainInches, double windSpeed, int humidityPercent,int ID) {
 
         Statement stmt = null;
 
-        try{
+        try {
             stmt = conn.createStatement();
 
 //            String sql = "insert into raspystudent.WEATHER(Date, Time, Temp, Rainfall, Wind,Humidity) " +
@@ -48,25 +49,26 @@ public class DataRetrieval {
 
             PreparedStatement pst = conn.prepareStatement("insert into WEATHER(" +
                     "Date, Time, Temperature, rainInches, windSpeed,humidityPercent,ID) values(?,?,?,?,?,?,?)");
-            pst.setDate(1,inputDate);
-            pst.setTime(2,inputTime);
-            pst.setDouble(3,temperature);
-            pst.setDouble(4,rainInches);
-            pst.setDouble(5,windSpeed);
-            pst.setDouble(6,humidityPercent);
-            pst.setInt(7,ID);
+            pst.setDate(1, inputDate);
+            pst.setTime(2, inputTime);
+            pst.setDouble(3, temperature);
+            pst.setDouble(4, rainInches);
+            pst.setDouble(5, windSpeed);
+            pst.setDouble(6, humidityPercent);
+            pst.setInt(7, ID);
             pst.execute();
-            pst.close();
+            //pst.close();
 
             //stmt.executeUpdate(sql);
         }
 
-        catch(SQLException e){
+        catch (SQLException e) {
             System.out.println("SQL Exception: " + e);
         }
+    }
 
-        finally{
-            // Close resources
+    public void closeConnection(Connection conn, Statement stmt){
+
             try{
                 if(stmt!=null){
                     conn.close();
@@ -86,13 +88,8 @@ public class DataRetrieval {
                 System.out.println("SQL Exception: " + e);
                 //
             }
-        }
-
-
     }
 
-
-    // TODO - test me
     // Get all data
     public static ResultSet getWeather(Connection conn)throws Exception {
         return getResultSet(conn,"SELECT * FROM WEATHER");
@@ -106,8 +103,6 @@ public class DataRetrieval {
 
     }
 
-
-
     private static Date stringToSQLDate(String string){
         SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
         java.sql.Date sqlDate = null;
@@ -115,7 +110,6 @@ public class DataRetrieval {
         try{
             java.util.Date date = format.parse(string);
             sqlDate = new Date(date.getTime());
-
 
         }
         catch(Exception e){
@@ -129,7 +123,6 @@ public class DataRetrieval {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm:ss");
 
-
         try{
             java.util.Date time = simpleDateFormat.parse(string);
             sqlTime = new Time(time.getTime());
@@ -137,7 +130,6 @@ public class DataRetrieval {
         catch(Exception e){
             System.out.println("Error parsing time string: " + e);
         }
-
 
         return sqlTime;
     }
@@ -148,6 +140,7 @@ public class DataRetrieval {
         try {
             stmt = conn.createStatement();
             PreparedStatement pst = conn.prepareStatement("TRUNCATE WEATHER");
+            pst.execute();
 
 
         }
@@ -156,6 +149,7 @@ public class DataRetrieval {
         }
     }
 
+    // TODO - Set up so main method accepts args for each line as args
     public static void main(String[] args){
 
         long startTime = System.currentTimeMillis();
@@ -164,36 +158,31 @@ public class DataRetrieval {
         DataRetrieval bob = new DataRetrieval();
         Connection connection = bob.establishConnection();
 
+        bob.deleteAll(connection);
+
         java.sql.Date myDate = stringToSQLDate("01-01-2011");
         java.sql.Time myTime = stringToSQLTime("07:34:33");
 
-        bob.deleteAll(connection);
+        bob.updateDB(connection,myDate,myTime,4,3,2,1,50);
 
+        ResultSet rs = null;
 
-        bob.updateDB(connection,myDate,myTime,4,3,2,1,2);
-
-
-
-
-//        // TODO - Turn me into a method
+        // TODO - Turn me into a method
         try{
-            ResultSet rs = getWeather(connection);
+            rs = getWeather(connection);
             while(rs.next()){
-                System.out.println(rs.getString(0) + " " + rs.getString(1) + " "
-                        + rs.getString(2) + " " + rs.getString(3) + " " +
-                        rs.getString(4) + " " + rs.getString(5));
+                System.out.println("Date: " + rs.getString(1) + " \nTime: " + rs.getString(2) + " \nTemp: "
+                        + rs.getString(3) + " \nRain: " + rs.getFloat(4) + " \nWind: " +
+                        rs.getString(5) + " \nHumidity: " + rs.getString(6));
             }
         }
         catch(Exception e){
-            //
+            System.out.println(e);
         }
 
-        bob.deleteAll(connection);
-
-        long endTime = System.currentTimeMillis();
-        float elapse = ((endTime-startTime)/1000);
+    long endTime = System.currentTimeMillis();
+    float elapse = ((endTime-startTime)/1000);
         System.out.println("That took like " + elapse + " seconds");
+
     }
-
-
 }
