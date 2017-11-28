@@ -4,13 +4,28 @@ package Semester_Project;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class DataRetrieval {
 
-    int ID= 0;
+    private int columnCount= 0;
+    private Connection conn;
+    private ResultSet rs;
 
-    private Connection establishConnection(){
+
+    private ArrayList<java.sql.Date> dateArrayList;
+    private ArrayList<java.sql.Time> timeArrayList;
+    private ArrayList<Double> rainArrayList;
+    private ArrayList<Double> windArrayList;
+    private ArrayList<Double> humidityArrayList;
+    private ArrayList<Double> temperatureArrayList;
+
+
+
+
+    private void establishConnection(){
         //String url = "jdbc:mysql://raspy.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
         String url = "jdbc:mysql://raspystudent.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
 
@@ -32,12 +47,44 @@ public class DataRetrieval {
             System.out.println("Oops something went wrong when trying to connect to the database");
 
         }
-        return conn;
+
+        this.conn = conn;
+    }
+
+    private DataRetrieval(){
+        establishConnection();
+
+        try {
+
+            this.rs = getWeather(conn);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            columnCount = rsmd.getColumnCount();
+            dateArrayList = new ArrayList<>(columnCount);
+            timeArrayList = new ArrayList<>(columnCount);
+            rainArrayList = new ArrayList<>(columnCount);
+            windArrayList = new ArrayList<>(columnCount);
+            humidityArrayList = new ArrayList<>(columnCount);
+            temperatureArrayList = new ArrayList<>(columnCount);
+
+            while(rs.next()){
+                dateArrayList.add(rs.getDate(1));
+                timeArrayList.add(rs.getTime(2));
+                temperatureArrayList.add(rs.getDouble(3));
+                rainArrayList.add(rs.getDouble(4));
+                windArrayList.add(rs.getDouble(5));
+                humidityArrayList.add(rs.getDouble(6));
+
+            }
+        }
+        catch(Exception e){
+            //
+        }
+
     }
 
 
     private void updateDB(Connection conn, java.sql.Date inputDate, java.sql.Time inputTime,
-                          double temperature, double rainInches, double windSpeed, int humidityPercent,int ID) {
+                          double temperature, double rainInches, double windSpeed, int humidityPercent) {
 
         Statement stmt = null;
 
@@ -48,14 +95,13 @@ public class DataRetrieval {
 //                         "values(date,time,Temp,Rainfall,Wind,Humidity)";
 
             PreparedStatement pst = conn.prepareStatement("insert into WEATHER(" +
-                    "Date, Time, Temperature, rainInches, windSpeed,humidityPercent,ID) values(?,?,?,?,?,?,?)");
+                    "Date, Time, Temperature, rainInches, windSpeed,humidityPercent) values(?,?,?,?,?,?)");
             pst.setDate(1, inputDate);
             pst.setTime(2, inputTime);
             pst.setDouble(3, temperature);
             pst.setDouble(4, rainInches);
             pst.setDouble(5, windSpeed);
             pst.setDouble(6, humidityPercent);
-            pst.setInt(7, ID);
             pst.execute();
             //pst.close();
 
@@ -149,40 +195,61 @@ public class DataRetrieval {
         }
     }
 
-    // TODO - Set up so main method accepts args for each line as args
     public static void main(String[] args){
 
-        long startTime = System.currentTimeMillis();
 
         // Unit tests
         DataRetrieval bob = new DataRetrieval();
-        Connection connection = bob.establishConnection();
 
-        bob.deleteAll(connection);
+        java.sql.Date myDate = stringToSQLDate("11-27-2017");
+        java.sql.Time myTime = stringToSQLTime("05:45:00");
 
-        java.sql.Date myDate = stringToSQLDate("01-01-2011");
-        java.sql.Time myTime = stringToSQLTime("07:34:33");
 
-        bob.updateDB(connection,myDate,myTime,4,3,2,1,50);
+//        java.sql.Date myDate = stringToSQLDate(args[0]);
+//        java.sql.Time myTime = stringToSQLTime(args[1]);
+//        double temp = Double.parseDouble(args[2]);
+//        double rain = Double.parseDouble(args[3]);
+//        double wind = Double.parseDouble(args[4]);
+//        int percent = Integer.parseInt(args[5]);
+//        bob.updateDB(bob.conn,myDate,myTime,4,4,4,4);
+//        bob.updateDB(connection,myDate,myTime,temp,rain,wind,percent);
 
-        ResultSet rs = null;
+        bob.closeConnection(bob.conn, null);
 
-        // TODO - Turn me into a method
-        try{
-            rs = getWeather(connection);
-            while(rs.next()){
-                System.out.println("Date: " + rs.getString(1) + " \nTime: " + rs.getString(2) + " \nTemp: "
-                        + rs.getString(3) + " \nRain: " + rs.getFloat(4) + " \nWind: " +
-                        rs.getString(5) + " \nHumidity: " + rs.getString(6));
-            }
-        }
-        catch(Exception e){
-            System.out.println(e);
-        }
-
-    long endTime = System.currentTimeMillis();
-    float elapse = ((endTime-startTime)/1000);
-        System.out.println("That took like " + elapse + " seconds");
+        System.out.println(Arrays.toString(bob.timeArrayList.toArray()));
+        System.out.println("------");
+        System.out.println(Arrays.toString(bob.dateArrayList.toArray()));
+        System.out.println("------");
+        System.out.println(Arrays.toString(bob.temperatureArrayList.toArray()));
+        System.out.println("------");
+        System.out.println(Arrays.toString(bob.rainArrayList.toArray()));
+        System.out.println("------");
+        System.out.println(Arrays.toString(bob.windArrayList.toArray()));
+        System.out.println("------");
+        System.out.println(Arrays.toString(bob.humidityArrayList.toArray()));
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+    long startTime = System.currentTimeMillis();
+    long endTime = System.currentTimeMillis();
+    float elapse = ((endTime-startTime)/1000);
+        System.out.println("That took like " + elapse + " seconds");
+ */
