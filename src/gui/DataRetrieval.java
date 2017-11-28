@@ -1,12 +1,8 @@
 package Semester_Project;
-//package MySQLCon;
-
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
+
 
 public class DataRetrieval {
 
@@ -14,16 +10,12 @@ public class DataRetrieval {
     private Connection conn;
     private ResultSet rs;
 
-
     private ArrayList<java.sql.Date> dateArrayList;
     private ArrayList<java.sql.Time> timeArrayList;
     private ArrayList<Double> rainArrayList;
     private ArrayList<Double> windArrayList;
     private ArrayList<Double> humidityArrayList;
     private ArrayList<Double> temperatureArrayList;
-
-
-
 
     private void establishConnection(){
         //String url = "jdbc:mysql://raspy.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
@@ -84,7 +76,7 @@ public class DataRetrieval {
 
 
     private void updateDB(Connection conn, java.sql.Date inputDate, java.sql.Time inputTime,
-                          double temperature, double rainInches, double windSpeed, int humidityPercent) {
+                          double temperature, double rainInches, double windSpeed, double humidityPercent) {
 
         Statement stmt = null;
 
@@ -197,59 +189,19 @@ public class DataRetrieval {
 
     public static void main(String[] args){
 
-
         // Unit tests
         DataRetrieval bob = new DataRetrieval();
 
-        java.sql.Date myDate = stringToSQLDate("11-27-2017");
-        java.sql.Time myTime = stringToSQLTime("05:45:00");
+        java.sql.Date myDate = stringToSQLDate(args[0]);
+        java.sql.Time myTime = stringToSQLTime(args[1]);
+        double temp = Double.parseDouble(args[2]);
+        double rain = Double.parseDouble(args[3]);
+        double wind = Double.parseDouble(args[4]);
+        double percent = Integer.parseInt(args[5]);
 
-
-//        java.sql.Date myDate = stringToSQLDate(args[0]);
-//        java.sql.Time myTime = stringToSQLTime(args[1]);
-//        double temp = Double.parseDouble(args[2]);
-//        double rain = Double.parseDouble(args[3]);
-//        double wind = Double.parseDouble(args[4]);
-//        int percent = Integer.parseInt(args[5]);
-//        bob.updateDB(bob.conn,myDate,myTime,4,4,4,4);
-//        bob.updateDB(connection,myDate,myTime,temp,rain,wind,percent);
+        bob.updateDB(bob.conn,myDate,myTime,temp,rain,wind,percent);
 
         bob.closeConnection(bob.conn, null);
 
-        System.out.println(Arrays.toString(bob.timeArrayList.toArray()));
-        System.out.println("------");
-        System.out.println(Arrays.toString(bob.dateArrayList.toArray()));
-        System.out.println("------");
-        System.out.println(Arrays.toString(bob.temperatureArrayList.toArray()));
-        System.out.println("------");
-        System.out.println(Arrays.toString(bob.rainArrayList.toArray()));
-        System.out.println("------");
-        System.out.println(Arrays.toString(bob.windArrayList.toArray()));
-        System.out.println("------");
-        System.out.println(Arrays.toString(bob.humidityArrayList.toArray()));
-
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-    long startTime = System.currentTimeMillis();
-    long endTime = System.currentTimeMillis();
-    float elapse = ((endTime-startTime)/1000);
-        System.out.println("That took like " + elapse + " seconds");
- */
