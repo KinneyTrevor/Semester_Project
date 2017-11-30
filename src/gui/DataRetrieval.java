@@ -1,21 +1,38 @@
 package Semester_Project;
-//package MySQLCon;
-
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Calendar;
+import java.util.ArrayList;
+
 
 public class DataRetrieval
 {
 
+<<<<<<< HEAD
 	int ID = 0;
+=======
+    private int columnCount= 0;
+    private Connection conn;
+    private ResultSet rs;
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
+<<<<<<< HEAD
 	private Connection establishConnection()
 	{
 		// String url =
 		// "jdbc:mysql://raspy.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
 		String url = "jdbc:mysql://raspystudent.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
+=======
+    private ArrayList<java.sql.Date> dateArrayList;
+    private ArrayList<java.sql.Time> timeArrayList;
+    private ArrayList<Double> rainArrayList;
+    private ArrayList<Double> windArrayList;
+    private ArrayList<Double> humidityArrayList;
+    private ArrayList<Double> temperatureArrayList;
+
+    private void establishConnection(){
+        //String url = "jdbc:mysql://raspy.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
+        String url = "jdbc:mysql://raspystudent.ciopnus8w2eh.us-west-1.rds.amazonaws.com:3306/";
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
 		// ;sendStringParametersAsUnicode=false"
 		String userName = "raspystudent";
@@ -35,15 +52,58 @@ public class DataRetrieval
 			System.out.println(e);
 			System.out.println("Oops something went wrong when trying to connect to the database");
 
+<<<<<<< HEAD
 		}
 		return conn;
 	}
+=======
+        }
+
+        this.conn = conn;
+    }
+
+    private DataRetrieval(){
+        establishConnection();
+
+        try {
+
+            this.rs = getWeather(conn);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            columnCount = rsmd.getColumnCount();
+            dateArrayList = new ArrayList<>(columnCount);
+            timeArrayList = new ArrayList<>(columnCount);
+            rainArrayList = new ArrayList<>(columnCount);
+            windArrayList = new ArrayList<>(columnCount);
+            humidityArrayList = new ArrayList<>(columnCount);
+            temperatureArrayList = new ArrayList<>(columnCount);
+
+            while(rs.next()){
+                dateArrayList.add(rs.getDate(1));
+                timeArrayList.add(rs.getTime(2));
+                temperatureArrayList.add(rs.getDouble(3));
+                rainArrayList.add(rs.getDouble(4));
+                windArrayList.add(rs.getDouble(5));
+                humidityArrayList.add(rs.getDouble(6));
+
+            }
+        }
+        catch(Exception e){
+            //
+        }
+
+    }
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
 	private void updateDB(Connection conn, java.sql.Date inputDate, java.sql.Time inputTime, double temperature,
 			double rainInches, double windSpeed, int humidityPercent, int ID)
 	{
 
+<<<<<<< HEAD
 		Statement stmt = null;
+=======
+    private void updateDB(Connection conn, java.sql.Date inputDate, java.sql.Time inputTime,
+                          double temperature, double rainInches, double windSpeed, double humidityPercent) {
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
 		try
 		{
@@ -65,8 +125,21 @@ public class DataRetrieval
 			pst.execute();
 			// pst.close();
 
+<<<<<<< HEAD
 			// stmt.executeUpdate(sql);
 		}
+=======
+            PreparedStatement pst = conn.prepareStatement("insert into WEATHER(" +
+                    "Date, Time, Temperature, rainInches, windSpeed,humidityPercent) values(?,?,?,?,?,?)");
+            pst.setDate(1, inputDate);
+            pst.setTime(2, inputTime);
+            pst.setDouble(3, temperature);
+            pst.setDouble(4, rainInches);
+            pst.setDouble(5, windSpeed);
+            pst.setDouble(6, humidityPercent);
+            pst.execute();
+            //pst.close();
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
 		catch (SQLException e)
 		{
@@ -174,19 +247,42 @@ public class DataRetrieval
 
 		long startTime = System.currentTimeMillis();
 
+<<<<<<< HEAD
 		// Unit tests
 		DataRetrieval bob = new DataRetrieval();
 		Connection connection = bob.establishConnection();
+=======
+    public static void main(String[] args){
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
+<<<<<<< HEAD
 		bob.deleteAll(connection);
 
 		java.sql.Date myDate = stringToSQLDate("01-01-2011");
 		java.sql.Time myTime = stringToSQLTime("07:34:33");
+=======
+        // Unit tests
+        DataRetrieval bob = new DataRetrieval();
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
+<<<<<<< HEAD
 		bob.updateDB(connection, myDate, myTime, 4, 3, 2, 1, 50);
+=======
+        java.sql.Date myDate = stringToSQLDate(args[0]);
+        java.sql.Time myTime = stringToSQLTime(args[1]);
+        double temp = Double.parseDouble(args[2]);
+        double rain = Double.parseDouble(args[3]);
+        double wind = Double.parseDouble(args[4]);
+        double percent = Integer.parseInt(args[5]);
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
+<<<<<<< HEAD
 		ResultSet rs = null;
+=======
+        bob.updateDB(bob.conn,myDate,myTime,temp,rain,wind,percent);
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
 
+<<<<<<< HEAD
 		// TODO - Turn me into a method
 		try
 		{
@@ -208,3 +304,9 @@ public class DataRetrieval
 
 	}
 }
+=======
+        bob.closeConnection(bob.conn, null);
+
+    }
+}
+>>>>>>> branch 'master' of https://github.com/KinneyTrevor/Semester_Project.git
