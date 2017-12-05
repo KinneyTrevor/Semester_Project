@@ -11,8 +11,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.GregorianCalendar;
-
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,6 +27,7 @@ public class RaspiCalendar {
 	private static JFrame raspiRevolutionaries = new JFrame();
 
 	public static void main(String[] args) {
+		timeofday = TIMESOFDAY.MORNING;
 		calendarSetup();
 		controlSetup();
 
@@ -64,8 +63,8 @@ public class RaspiCalendar {
 		JPanel buttonPane = new JPanel();
 		GregorianCalendar calendar = new GregorianCalendar();
 		CalendarView calendarView = new CalendarView(calendar, 450, 450);
-		
-		JButton view = new JButton("View Selected Date");
+
+		JButton view = new JButton("View Selection");
 		view.setFont(new Font("Digital-7 Mono", Font.TRUETYPE_FONT, 34));
 		view.setBackground(Color.black);
 		view.setForeground(Color.green);
@@ -73,12 +72,9 @@ public class RaspiCalendar {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					DataRetrieval.retrieveData();
-					System.out.println(
-							calendar.get(1) + "/" + (calendar.get(2) + 1) + "/" + calendar.get(5) + " " + timeofday);
-					Data selectedDate = new Data(calendar.get(1), calendar.get(2) + 1, calendar.get(5));
-					// Send the enum TIMESOFDAY along with the selectedDate
-					// object
+					new fredsGUI(new Data(calendar.get(1), calendar.get(2) + 1, calendar.get(5)), timeofday);
 				} catch (Exception e) {
+					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, e.getMessage());
 				}
 			}
@@ -92,7 +88,7 @@ public class RaspiCalendar {
 				calendarView.prevMonth();
 			}
 		});
-		
+
 		JButton right = new JButton(">>");
 		right.setBackground(Color.black);
 		right.setForeground(Color.green);
@@ -100,7 +96,7 @@ public class RaspiCalendar {
 			public void actionPerformed(ActionEvent arg0) {
 				calendarView.nextMonth();
 			}
-		});	
+		});
 		
 		buttonPane.setLayout(new FlowLayout());
 		buttonPane.setBackground(Color.BLACK);
@@ -111,7 +107,7 @@ public class RaspiCalendar {
 		buttonPane.setVisible(true);
 
 		calendarView.setBackground(Color.BLACK);
-		
+
 		calendarPane.setLayout(new BorderLayout());
 		calendarPane.setBackground(Color.BLACK);
 		calendarPane.add(calendarView, BorderLayout.CENTER);
@@ -129,6 +125,7 @@ public class RaspiCalendar {
 		morning.setFont(new Font("Digital-7 Mono", Font.TRUETYPE_FONT, 14));
 		morning.setForeground(Color.green);
 		morning.setBackground(Color.BLACK);
+		morning.setSelected(true);
 
 		JRadioButton afternoon = new JRadioButton("Afternoon");
 		afternoon.setFont(new Font("Digital-7 Mono", Font.TRUETYPE_FONT, 14));

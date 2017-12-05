@@ -3,6 +3,7 @@ package proto;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 public class DataRetrieval {
 	private static Connection conn;
@@ -22,7 +23,7 @@ public class DataRetrieval {
 		String userName = "raspystudent";
 		String password = "weatherstation";
 		String dbName = "raspystudent";
-//		String driver = "com.mysql.jdbc.Driver";
+		// String driver = "com.mysql.jdbc.Driver";
 		conn = null;
 		stmt = null;
 
@@ -132,13 +133,42 @@ public class DataRetrieval {
 		return sqlDate;
 	}
 
-	public static Time stringToSQLTime(String string) {
-		java.sql.Time sqlTime = null;
+	public static Date todayToSQLDate() {
+		SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+		java.sql.Date sqlDate = null;
+		GregorianCalendar now = new GregorianCalendar();
 
+		try {
+			java.util.Date date = format.parse((now.get(2) + 1) + "-" + now.get(5) + "-" + now.get(1));
+			sqlDate = new Date(date.getTime());
+
+		} catch (Exception e) {
+			System.out.println("Error parsing date string: " + e);
+		}
+		return sqlDate;
+	}
+
+	public static Time stringToSQLTime(String string) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+		java.sql.Time sqlTime = null;
 
 		try {
 			java.util.Date time = simpleDateFormat.parse(string);
+			sqlTime = new Time(time.getTime());
+		} catch (Exception e) {
+			System.out.println("Error parsing time string: " + e);
+		}
+
+		return sqlTime;
+	}
+
+	public static Time nowToSQLTime() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+		java.sql.Time sqlTime = null;
+		GregorianCalendar now = new GregorianCalendar();
+
+		try {
+			java.util.Date time = simpleDateFormat.parse(now.get(11) + ":" + now.get(12) + ":" + now.get(13));
 			sqlTime = new Time(time.getTime());
 		} catch (Exception e) {
 			System.out.println("Error parsing time string: " + e);
@@ -157,7 +187,41 @@ public class DataRetrieval {
 		}
 	}
 
-	public static void main(String [] args){
-		stringToSQLTime("12:30:50");
+	public static void main(String[] args) {
+		try {
+			establishConnection();
+			deleteAll(conn);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.NIGHT.getStartTime()), 22, 18, 31, 07);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.NIGHT.getEndTime()), 22, 18, 31, 07);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.MORNING.getStartTime()), 22, 18, 31, 07);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.MORNING.getEndTime()), 22, 18, 31, 07);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.AFTERNOON.getStartTime()), 22, 18, 31, 07);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.AFTERNOON.getEndTime()), 22, 18, 31, 07);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.EVENING.getStartTime()), 22, 18, 31, 07);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime("20:40:10"), 22, 18, 31, 07);
+			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.EVENING.getEndTime()), 22, 18, 31, 07);
+			retrieveData();
+			for (java.sql.Date el : dateArrayList) {
+				System.out.println(el);
+			}
+			for (java.sql.Time el : timeArrayList) {
+				System.out.println(el);
+			}
+			for (Double el : temperatureArrayList) {
+				System.out.println(el);
+			}
+			for (Double el : rainArrayList) {
+				System.out.println(el);
+			}
+			for (Double el : windArrayList) {
+				System.out.println(el);
+			}
+			for (Double el : humidityArrayList) {
+				System.out.println(el);
+			}
+			closeConnection();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }

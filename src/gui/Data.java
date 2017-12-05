@@ -7,36 +7,43 @@ import java.util.TreeMap;
 
 public class Data {
 
-	TreeMap<Date, Integer> timeIndex = new TreeMap<>();
-	ArrayList<Double> temp = new ArrayList<>();
-	int morningBeg, morningEnd;
-	int afternoonBeg, afternoonEnd;
-	int eveningBeg, eveningEnd;
-	int nightBeg, nightEnd;
+	private TreeMap<Date, Integer> timeIndex = new TreeMap<>();
+	private ArrayList<Double> temporary = new ArrayList<>();
+	private int morningBeg, morningEnd;
+	private int afternoonBeg, afternoonEnd;
+	private int eveningBeg, eveningEnd;
+	private int nightBeg, nightEnd;
+	private String query;
 
 	public Data(int year, int month, int day) throws Exception {
-		String query = month + "-" + day + "-" + year;
+		query = month + "-" + day + "-" + year;
 		int posCount;
 		int startInd = DataRetrieval.dateArrayList.indexOf(DataRetrieval.stringToSQLDate(query));
 		int endInd = DataRetrieval.dateArrayList.lastIndexOf(DataRetrieval.stringToSQLDate(query));
 
 		if (startInd == -1 || endInd == -1) {
-			throw new Exception("No data for specified date");
+			throw new Exception("No data found for specified date");
 		}
 
 		posCount = startInd;
-		for (Date el : DataRetrieval.timeArrayList.subList(startInd, endInd)) {
+		for (java.sql.Time el : DataRetrieval.timeArrayList.subList(startInd, endInd + 1)) {
 			timeIndex.put(el, posCount);
 			posCount++;
 		}
 
+		//This section of the code is a bit delicate---
 		nightBeg = startInd;
-		nightEnd = timeIndex.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime("05:59:59")));
-		morningBeg = timeIndex.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime("06:00:00")));
-		morningEnd = timeIndex.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime("11:59:59")));
-		afternoonBeg = timeIndex.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime("12:00:00")));
-		afternoonEnd = timeIndex.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime("15:59:59")));
-		eveningBeg = timeIndex.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime("16:00:00")));
+		nightEnd = timeIndex.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.NIGHT.getEndTime())));
+		morningBeg = timeIndex
+				.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.MORNING.getStartTime())));
+		morningEnd = timeIndex
+				.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.MORNING.getEndTime())));
+		afternoonBeg = timeIndex
+				.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.AFTERNOON.getStartTime())));
+		afternoonEnd = timeIndex
+				.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.AFTERNOON.getEndTime())));
+		eveningBeg = timeIndex
+				.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.EVENING.getStartTime())));
 		eveningEnd = endInd;
 	}
 
@@ -66,15 +73,15 @@ public class Data {
 	}
 
 	public double getHiTempC() {
-		temp = DataRetrieval.temperatureArrayList;
-		temp.sort(new AscendingComparator());
-		return temp.get(temp.size() - 1);
+		temporary = DataRetrieval.temperatureArrayList;
+		temporary.sort(new AscendingComparator());
+		return temporary.get(temporary.size() - 1);
 	}
 
 	public double getLoTempC() {
-		temp = DataRetrieval.temperatureArrayList;
-		temp.sort(new AscendingComparator());
-		return temp.get(0);
+		temporary = DataRetrieval.temperatureArrayList;
+		temporary.sort(new AscendingComparator());
+		return temporary.get(0);
 	}
 
 	public double getHiTempF() {
@@ -111,15 +118,15 @@ public class Data {
 	}
 
 	public double getHiWindspeedMph() {
-		temp = DataRetrieval.windArrayList;
-		temp.sort(new AscendingComparator());
-		return temp.get(temp.size() - 1);
+		temporary = DataRetrieval.windArrayList;
+		temporary.sort(new AscendingComparator());
+		return temporary.get(temporary.size() - 1);
 	}
 
 	public double getHiWindspeedMps() {
-		temp = DataRetrieval.windArrayList;
-		temp.sort(new AscendingComparator());
-		return temp.get(0);
+		temporary = DataRetrieval.windArrayList;
+		temporary.sort(new AscendingComparator());
+		return temporary.get(0);
 	}
 
 	// Rainfall--
@@ -182,20 +189,24 @@ public class Data {
 		}
 		return sum / siz;
 	}
-}
 
-class AscendingComparator implements Comparator<Double> {
-	@Override
-	public int compare(Double o1, Double o2) {
-		return o1.compareTo(o2);
+	public String getDate() {
+		return query;
 	}
 
-}
+	class AscendingComparator implements Comparator<Double> {
+		@Override
+		public int compare(Double o1, Double o2) {
+			return o1.compareTo(o2);
+		}
 
-class DescendingComparator implements Comparator<Double> {
-	@Override
-	public int compare(Double o1, Double o2) {
-		return o1.compareTo(o2) * -1;
 	}
 
+	class DescendingComparator implements Comparator<Double> {
+		@Override
+		public int compare(Double o1, Double o2) {
+			return o1.compareTo(o2) * -1;
+		}
+
+	}
 }

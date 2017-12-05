@@ -2,10 +2,13 @@ package proto;
 
 import java.awt.EventQueue;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+//import javax.swing.JMenuBar;
+//import javax.swing.JMenu;
+//import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+//import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -17,9 +20,13 @@ import java.awt.Dimension;
 import javax.swing.JLabel;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+//import java.awt.event.WindowAdapter;
+//import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
-import javax.swing.JButton;
+//import javax.swing.JButton;
 
 /**
  * 
@@ -29,6 +36,8 @@ import javax.swing.JButton;
 public class fredsGUI {
 	// fields
 	private JFrame frmWeatherStation;
+	private Data dIn;
+	private TIMESOFDAY section;
 
 	/**
 	 * Launch the application.
@@ -49,8 +58,16 @@ public class fredsGUI {
 	/**
 	 * Create the application.
 	 */
+	public fredsGUI(Data dIn, TIMESOFDAY section) {
+		this.dIn = dIn;
+		this.section = section;
+		initialize();
+		frmWeatherStation.setVisible(true);
+	}
+
 	public fredsGUI() {
 		initialize();
+		frmWeatherStation.setVisible(true);
 	}
 
 	/**
@@ -86,6 +103,17 @@ public class fredsGUI {
 		// Sets up GUI
 		frmWeatherStation = new JFrame();
 		frmWeatherStation.setTitle("Weather Station");
+		frmWeatherStation.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frmWeatherStation.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				try {
+					DataRetrieval.closeConnection();
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "Database did not close properly");
+				}
+				frmWeatherStation.dispose();
+			}
+		});
 		frmWeatherStation.setIconImage(
 				Toolkit.getDefaultToolkit().getImage(fredsGUI.class.getResource("/images/weatherStationIcon.png")));
 		frmWeatherStation.getContentPane().setBackground(new Color(0, 0, 0));
@@ -93,17 +121,24 @@ public class fredsGUI {
 		Dimension screenSize = frmWeatherStation.getSize();
 		frmWeatherStation.setSize(screenSize);
 
-		JButton btnHistoricalData = new JButton("");
-		btnHistoricalData.setToolTipText("Opens a calendar in which you can get historical data by date.");
-		btnHistoricalData
-				.setSelectedIcon(new ImageIcon(fredsGUI.class.getResource("/images/historicalDataButton.png")));
-		btnHistoricalData.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/historicalDataButton.png")));
-		btnHistoricalData.setForeground(Color.BLACK);
-		btnHistoricalData.setBackground(Color.BLACK);
-		btnHistoricalData.setFont(new Font("notoSans", Font.PLAIN, 21));
-		btnHistoricalData.setBounds(484, 416, 224, 70);
-		btnHistoricalData.setBorderPainted(false);
-		frmWeatherStation.getContentPane().add(btnHistoricalData);
+		 JButton btnHistoricalData = new JButton("Close Popup");
+//		 btnHistoricalData.setToolTipText("Opens a calendar in which you can get historical data by date.");
+//		 btnHistoricalData
+//		 .setSelectedIcon(new
+//		 ImageIcon(fredsGUI.class.getResource("/images/historicalDataButton.png")));
+//		 btnHistoricalData.setIcon(new
+//		 ImageIcon(fredsGUI.class.getResource("/images/historicalDataButton.png")));
+		 btnHistoricalData.setForeground(Color.GREEN);
+		 btnHistoricalData.setBackground(Color.BLACK);
+		 btnHistoricalData.setFont(new Font("notoSans", Font.PLAIN, 21));
+		 btnHistoricalData.setBounds(484, 416, 224, 70);
+		 btnHistoricalData.setBorderPainted(false);
+		 btnHistoricalData.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					frmWeatherStation.dispose();
+				}
+			});
+		 frmWeatherStation.getContentPane().add(btnHistoricalData);
 
 		JLabel lblImage = new JLabel("");
 		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
@@ -123,7 +158,7 @@ public class fredsGUI {
 		separator_2.setBounds(22, 21, 754, 2);
 		frmWeatherStation.getContentPane().add(separator_2);
 
-		JLabel label = new JLabel("000.0");
+		JLabel label = new JLabel(String.format("%.1f", dIn.getAverWindspeedMph(section)));
 		label.setFont(digital7Mono);
 		label.setForeground(new Color(0, 255, 0));
 		label.setBounds(22, 62, 225, 98);
@@ -161,7 +196,7 @@ public class fredsGUI {
 		lblTemperature.setBounds(22, 214, 282, 35);
 		frmWeatherStation.getContentPane().add(lblTemperature);
 
-		JLabel label_1 = new JLabel("000");
+		JLabel label_1 = new JLabel(String.format("%.1f", dIn.getAverTempF(section)));
 		label_1.setHorizontalAlignment(SwingConstants.LEFT);
 		label_1.setFont(digital7Mono);
 		label_1.setForeground(Color.GREEN);
@@ -185,20 +220,20 @@ public class fredsGUI {
 		lblIpsum.setBounds(22, 394, 191, 35);
 		frmWeatherStation.getContentPane().add(lblIpsum);
 
-		JLabel label_2 = new JLabel("00");
+		JLabel label_2 = new JLabel(String.format("%.0f", dIn.getRainfallCentimeters(section)));
 		label_2.setHorizontalAlignment(SwingConstants.LEFT);
 		label_2.setFont(digital7Mono);
 		label_2.setForeground(Color.GREEN);
 		label_2.setBounds(22, 423, 131, 98);
 		frmWeatherStation.getContentPane().add(label_2);
 
-		JLabel lblNewLabel_1 = new JLabel("FT");
+		JLabel lblNewLabel_1 = new JLabel("CM");
 		lblNewLabel_1.setForeground(Color.GREEN);
 		lblNewLabel_1.setFont(notoSans);
-		lblNewLabel_1.setBounds(53, 515, 33, 42);
+		lblNewLabel_1.setBounds(60, 515, 33, 42);
 		frmWeatherStation.getContentPane().add(lblNewLabel_1);
 
-		JLabel lblNewLabel_2 = new JLabel("00");
+		JLabel lblNewLabel_2 = new JLabel(String.format("%.0f", dIn.getRainfallInches(section)));
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_2.setFont(digital7Mono);
 		lblNewLabel_2.setForeground(Color.GREEN);
@@ -228,14 +263,14 @@ public class fredsGUI {
 		label_3.setBounds(81, 697, 25, 42);
 		frmWeatherStation.getContentPane().add(label_3);
 
-		JLabel label_4 = new JLabel("000");
+		JLabel label_4 = new JLabel(String.format("%.1f", dIn.getAverHumidity(section)));
 		label_4.setFont(digital7Mono);
 		label_4.setHorizontalAlignment(SwingConstants.LEFT);
 		label_4.setForeground(Color.GREEN);
 		label_4.setBounds(22, 602, 191, 98);
 		frmWeatherStation.getContentPane().add(label_4);
 
-		JLabel label_5 = new JLabel("00/00/00");
+		JLabel label_5 = new JLabel(dIn.getDate());
 		label_5.setHorizontalAlignment(SwingConstants.RIGHT);
 		label_5.setFont(digital7Mono);
 		label_5.setForeground(Color.GREEN);
@@ -247,7 +282,7 @@ public class fredsGUI {
 		separator_6.setBounds(418, 375, 358, 7);
 		frmWeatherStation.getContentPane().add(separator_6);
 
-		JLabel lblNewLabel_4 = new JLabel("00:00:00");
+		JLabel lblNewLabel_4 = new JLabel(section.toString());
 		lblNewLabel_4.setFont(digital7Mono);
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_4.setForeground(Color.GREEN);
@@ -279,50 +314,50 @@ public class fredsGUI {
 		frmWeatherStation.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmWeatherStation.setLocationRelativeTo(null);
 
-		JMenuBar menuBar = new JMenuBar();
-		frmWeatherStation.setJMenuBar(menuBar);
-
-		JMenu mnFile = new JMenu("File");
-		mnFile.setFont(new Font("notoSans", Font.PLAIN, 22));
-		menuBar.add(mnFile);
-
-		JMenuItem mntmOpen = new JMenuItem("Open");
-		mntmOpen.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/open_black_icon.png")));
-		mntmOpen.setHorizontalAlignment(SwingConstants.LEFT);
-		mntmOpen.setFont(new Font("notoSans", Font.PLAIN, 18));
-		mnFile.add(mntmOpen);
-
-		JSeparator separator = new JSeparator();
-		mnFile.add(separator);
-
-		JMenuItem mntmSave = new JMenuItem("Save");
-		mntmSave.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/save_black_icon.png")));
-		mntmSave.setHorizontalAlignment(SwingConstants.LEFT);
-		mntmSave.setFont(new Font("notoSans", Font.PLAIN, 18));
-		mnFile.add(mntmSave);
-
-		JSeparator separator_1 = new JSeparator();
-		mnFile.add(separator_1);
-
-		JMenuItem mntmExit = new JMenuItem("Exit");
-		mntmExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
-		mntmExit.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/close_red_icon.png")));
-		mntmExit.setHorizontalAlignment(SwingConstants.LEFT);
-		mntmExit.setFont(new Font("notoSans", Font.PLAIN, 18));
-		mnFile.add(mntmExit);
-
-		JMenu mnHelp = new JMenu("Help");
-		mnHelp.setFont(new Font("notoSans", Font.PLAIN, 22));
-		menuBar.add(mnHelp);
-
-		JMenuItem mntmAbout = new JMenuItem("About");
-		mntmAbout.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/about_black_icon.png")));
-		mntmAbout.setHorizontalAlignment(SwingConstants.LEFT);
-		mntmAbout.setFont(new Font("notoSans", Font.PLAIN, 18));
-		mnHelp.add(mntmAbout);
+//		JMenuBar menuBar = new JMenuBar();
+//		frmWeatherStation.setJMenuBar(menuBar);
+//
+//		JMenu mnFile = new JMenu("File");
+//		mnFile.setFont(new Font("notoSans", Font.PLAIN, 22));
+//		menuBar.add(mnFile);
+//
+//		JMenuItem mntmOpen = new JMenuItem("Open");
+//		mntmOpen.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/open_black_icon.png")));
+//		mntmOpen.setHorizontalAlignment(SwingConstants.LEFT);
+//		mntmOpen.setFont(new Font("notoSans", Font.PLAIN, 18));
+//		mnFile.add(mntmOpen);
+//
+//		JSeparator separator = new JSeparator();
+//		mnFile.add(separator);
+//
+//		JMenuItem mntmSave = new JMenuItem("Save");
+//		mntmSave.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/save_black_icon.png")));
+//		mntmSave.setHorizontalAlignment(SwingConstants.LEFT);
+//		mntmSave.setFont(new Font("notoSans", Font.PLAIN, 18));
+//		mnFile.add(mntmSave);
+//
+//		JSeparator separator_1 = new JSeparator();
+//		mnFile.add(separator_1);
+//
+//		JMenuItem mntmExit = new JMenuItem("Exit");
+//		mntmExit.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				frmWeatherStation.dispose();
+//			}
+//		});
+//		mntmExit.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/close_red_icon.png")));
+//		mntmExit.setHorizontalAlignment(SwingConstants.LEFT);
+//		mntmExit.setFont(new Font("notoSans", Font.PLAIN, 18));
+//		mnFile.add(mntmExit);
+//
+//		JMenu mnHelp = new JMenu("Help");
+//		mnHelp.setFont(new Font("notoSans", Font.PLAIN, 22));
+//		menuBar.add(mnHelp);
+//
+//		JMenuItem mntmAbout = new JMenuItem("About");
+//		mntmAbout.setIcon(new ImageIcon(fredsGUI.class.getResource("/images/about_black_icon.png")));
+//		mntmAbout.setHorizontalAlignment(SwingConstants.LEFT);
+//		mntmAbout.setFont(new Font("notoSans", Font.PLAIN, 18));
+//		mnHelp.add(mntmAbout);
 	}
 }

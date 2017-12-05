@@ -99,13 +99,9 @@ public class CalendarView extends JPanel {
 
 		int start = c.get(7) - 1;
 		for (int j = 0; j < start; buttonsAdded++) {
-			JButton dummyButton = new JButton("<");
+			JButton dummyButton = new JButton("");
 			dummyButton.setBackground(Color.BLACK);
-			dummyButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					prevMonth();
-				}
-			});
+			dummyButton.setEnabled(false);
 			calDays.add(dummyButton);
 			j++;
 		}
@@ -138,13 +134,9 @@ public class CalendarView extends JPanel {
 		}
 
 		for (; buttonsAdded < nRows * 7; buttonsAdded++) {
-			JButton dummyButton = new JButton(">");
+			JButton dummyButton = new JButton("");
+			dummyButton.setEnabled(false);
 			dummyButton.setBackground(Color.BLACK);
-			dummyButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					nextMonth();
-				}
-			});
 			calDays.add(dummyButton);
 		}
 		c.set(5, initialDay);
@@ -173,14 +165,11 @@ public class CalendarView extends JPanel {
 
 	public void prevDay() {
 		this.cal.add(5, -1);
-		select(this.currButton, this.cal.get(5));
 		repaintCalendar();
 	}
 
 	public void nextDay() {
 		this.cal.add(5, 1);
-		select(this.currButton, this.cal.get(5));
 		repaintCalendar();
 	}
 }
-
