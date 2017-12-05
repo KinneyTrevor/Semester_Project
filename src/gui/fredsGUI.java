@@ -158,7 +158,7 @@ public class fredsGUI {
 		separator_2.setBounds(22, 21, 754, 2);
 		frmWeatherStation.getContentPane().add(separator_2);
 
-		JLabel label = new JLabel(String.format("%.1f", dIn.getAverWindspeedMph(section)));
+		JLabel label = new JLabel(String.format("%.1f", dIn.getAverWindspeedMph()));
 		label.setFont(digital7Mono);
 		label.setForeground(new Color(0, 255, 0));
 		label.setBounds(22, 62, 225, 98);
@@ -196,7 +196,7 @@ public class fredsGUI {
 		lblTemperature.setBounds(22, 214, 282, 35);
 		frmWeatherStation.getContentPane().add(lblTemperature);
 
-		JLabel label_1 = new JLabel(String.format("%.1f", dIn.getAverTempF(section)));
+		JLabel label_1 = new JLabel(String.format("%.1f", dIn.getAverTempF()));
 		label_1.setHorizontalAlignment(SwingConstants.LEFT);
 		label_1.setFont(digital7Mono);
 		label_1.setForeground(Color.GREEN);
@@ -220,7 +220,7 @@ public class fredsGUI {
 		lblIpsum.setBounds(22, 394, 191, 35);
 		frmWeatherStation.getContentPane().add(lblIpsum);
 
-		JLabel label_2 = new JLabel(String.format("%.0f", dIn.getRainfallCentimeters(section)));
+		JLabel label_2 = new JLabel(String.format("%.0f", dIn.getRainfallCentimeters()));
 		label_2.setHorizontalAlignment(SwingConstants.LEFT);
 		label_2.setFont(digital7Mono);
 		label_2.setForeground(Color.GREEN);
@@ -233,7 +233,7 @@ public class fredsGUI {
 		lblNewLabel_1.setBounds(60, 515, 33, 42);
 		frmWeatherStation.getContentPane().add(lblNewLabel_1);
 
-		JLabel lblNewLabel_2 = new JLabel(String.format("%.0f", dIn.getRainfallInches(section)));
+		JLabel lblNewLabel_2 = new JLabel(String.format("%.0f", dIn.getRainfallInches()));
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_2.setFont(digital7Mono);
 		lblNewLabel_2.setForeground(Color.GREEN);
@@ -263,7 +263,7 @@ public class fredsGUI {
 		label_3.setBounds(81, 697, 25, 42);
 		frmWeatherStation.getContentPane().add(label_3);
 
-		JLabel label_4 = new JLabel(String.format("%.1f", dIn.getAverHumidity(section)));
+		JLabel label_4 = new JLabel(String.format("%.1f", dIn.getAverHumidity()));
 		label_4.setFont(digital7Mono);
 		label_4.setHorizontalAlignment(SwingConstants.LEFT);
 		label_4.setForeground(Color.GREEN);
@@ -282,7 +282,12 @@ public class fredsGUI {
 		separator_6.setBounds(418, 375, 358, 7);
 		frmWeatherStation.getContentPane().add(separator_6);
 
-		JLabel lblNewLabel_4 = new JLabel(section.toString());
+		JLabel lblNewLabel_4 = new JLabel();
+		if(dIn.selAct == false){
+			lblNewLabel_4.setText("XX:XX:XX");
+		}else{
+			lblNewLabel_4.setText(section.toString());
+		}
 		lblNewLabel_4.setFont(digital7Mono);
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_4.setForeground(Color.GREEN);

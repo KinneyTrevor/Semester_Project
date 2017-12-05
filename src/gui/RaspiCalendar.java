@@ -72,7 +72,11 @@ public class RaspiCalendar {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					DataRetrieval.retrieveData();
-					new fredsGUI(new Data(calendar.get(1), calendar.get(2) + 1, calendar.get(5)), timeofday);
+					Data grab = new Data(calendar.get(1), calendar.get(2) + 1, calendar.get(5), timeofday);
+					if(grab.selAct == false){		
+						JOptionPane.showMessageDialog(null, "Insufficient data to average selected timeframe\nShowing available data only-");
+					}
+					new fredsGUI(grab, timeofday);
 				} catch (Exception e) {
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null, e.getMessage());

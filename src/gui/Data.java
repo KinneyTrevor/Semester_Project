@@ -9,13 +9,11 @@ public class Data {
 
 	private TreeMap<Date, Integer> timeIndex = new TreeMap<>();
 	private ArrayList<Double> temporary = new ArrayList<>();
-	private int morningBeg, morningEnd;
-	private int afternoonBeg, afternoonEnd;
-	private int eveningBeg, eveningEnd;
-	private int nightBeg, nightEnd;
+	private int selBeg, selEnd;
 	private String query;
+	public boolean selAct = true; 
 
-	public Data(int year, int month, int day) throws Exception {
+	public Data(int year, int month, int day, TIMESOFDAY selection) throws Exception {
 		query = month + "-" + day + "-" + year;
 		int posCount;
 		int startInd = DataRetrieval.dateArrayList.indexOf(DataRetrieval.stringToSQLDate(query));
@@ -32,44 +30,46 @@ public class Data {
 		}
 
 		//This section of the code is a bit delicate---
-		nightBeg = startInd;
-		nightEnd = timeIndex.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.NIGHT.getEndTime())));
-		morningBeg = timeIndex
-				.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.MORNING.getStartTime())));
-		morningEnd = timeIndex
-				.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.MORNING.getEndTime())));
-		afternoonBeg = timeIndex
-				.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.AFTERNOON.getStartTime())));
-		afternoonEnd = timeIndex
-				.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.AFTERNOON.getEndTime())));
-		eveningBeg = timeIndex
-				.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime(TIMESOFDAY.EVENING.getStartTime())));
-		eveningEnd = endInd;
+		selBeg = validateceiling(selection.getStartTime());
+		selEnd = validatefloor(selection.getEndTime());
+		
+		if(selBeg == -1 || selEnd == -1){
+			selAct = false;
+		}
+		if(selBeg == -1){
+			selBeg = startInd;
+			System.out.println(startInd);
+		}
+		if(selEnd == -1){
+			selEnd = endInd;
+			System.out.println(endInd);
+		}
 	}
-
+	
+	private int validatefloor(String time){
+		if(timeIndex.floorKey(DataRetrieval.stringToSQLTime(time)) == null){
+			return -1;
+		}else{
+			return timeIndex.get(timeIndex.floorKey(DataRetrieval.stringToSQLTime(time)));
+		}
+	}
+	
+	private int validateceiling(String time){
+		if(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime(time)) == null){
+			return -1;
+		}else{
+			return timeIndex.get(timeIndex.ceilingKey(DataRetrieval.stringToSQLTime(time)));
+		}		
+	}
+	
 	// Temps
-	public double getAverTempC(TIMESOFDAY section) {
-		switch (section) {
-		case MORNING: {
-			return ArrayAverage(DataRetrieval.temperatureArrayList, morningBeg, morningEnd);
-		}
-		case EVENING: {
-			return ArrayAverage(DataRetrieval.temperatureArrayList, eveningBeg, eveningEnd);
-		}
-		case AFTERNOON: {
-			return ArrayAverage(DataRetrieval.temperatureArrayList, afternoonBeg, afternoonEnd);
-		}
-		case NIGHT: {
-			return ArrayAverage(DataRetrieval.temperatureArrayList, nightBeg, nightEnd);
-		}
-		default: {
-			return ArrayAverage(DataRetrieval.temperatureArrayList, morningBeg, nightEnd);
-		}
-		}
+	public double getAverTempC() {
+			return ArrayAverage(DataRetrieval.temperatureArrayList, selBeg, selEnd);
+
 	}
 
-	public double getAverTempF(TIMESOFDAY section) {
-		return (getAverTempC(section) * (9 / 5.0)) + 32;
+	public double getAverTempF() {
+		return (getAverTempC() * (9 / 5.0)) + 32;
 	}
 
 	public double getHiTempC() {
@@ -93,28 +93,12 @@ public class Data {
 	}
 
 	// Windspeed
-	public double getAverWindspeedMph(TIMESOFDAY section) {
-		return (getAverWindspeedMps(section) * 3600) / 1609.3;
+	public double getAverWindspeedMph() {
+		return (getAverWindspeedMps() * 3600) / 1609.3;
 	}
 
-	public double getAverWindspeedMps(TIMESOFDAY section) {
-		switch (section) {
-		case MORNING: {
-			return ArrayAverage(DataRetrieval.windArrayList, morningBeg, morningEnd);
-		}
-		case EVENING: {
-			return ArrayAverage(DataRetrieval.windArrayList, eveningBeg, eveningEnd);
-		}
-		case AFTERNOON: {
-			return ArrayAverage(DataRetrieval.windArrayList, afternoonBeg, afternoonEnd);
-		}
-		case NIGHT: {
-			return ArrayAverage(DataRetrieval.windArrayList, nightBeg, nightEnd);
-		}
-		default: {
-			return ArrayAverage(DataRetrieval.windArrayList, morningBeg, nightEnd);
-		}
-		}
+	public double getAverWindspeedMps() {
+			return ArrayAverage(DataRetrieval.windArrayList, selBeg, selEnd);
 	}
 
 	public double getHiWindspeedMph() {
@@ -130,53 +114,21 @@ public class Data {
 	}
 
 	// Rainfall--
-	public double getRainfallInches(TIMESOFDAY section) {
-		return getRainfall(section) / 150.0;
+	public double getRainfallInches() {
+		return getRainfall() / 150.0;
 	}
 
-	public double getRainfallCentimeters(TIMESOFDAY section) {
-		return getRainfall(section) / 45.0;
+	public double getRainfallCentimeters() {
+		return getRainfall() / 45.0;
 	}
 
-	private double getRainfall(TIMESOFDAY section) {
-		switch (section) {
-		case MORNING: {
-			return ArrayAverage(DataRetrieval.rainArrayList, morningBeg, morningEnd);
-		}
-		case EVENING: {
-			return ArrayAverage(DataRetrieval.rainArrayList, eveningBeg, eveningEnd);
-		}
-		case AFTERNOON: {
-			return ArrayAverage(DataRetrieval.rainArrayList, afternoonBeg, afternoonEnd);
-		}
-		case NIGHT: {
-			return ArrayAverage(DataRetrieval.rainArrayList, nightBeg, nightEnd);
-		}
-		default: {
-			return ArrayAverage(DataRetrieval.rainArrayList, morningBeg, nightEnd);
-		}
-		}
+	private double getRainfall() {
+		return ArrayAverage(DataRetrieval.rainArrayList, selBeg, selEnd);
 	}
 
 	// Humidity
-	public double getAverHumidity(TIMESOFDAY section) {
-		switch (section) {
-		case MORNING: {
-			return ArrayAverage(DataRetrieval.humidityArrayList, morningBeg, morningEnd);
-		}
-		case EVENING: {
-			return ArrayAverage(DataRetrieval.humidityArrayList, eveningBeg, eveningEnd);
-		}
-		case AFTERNOON: {
-			return ArrayAverage(DataRetrieval.humidityArrayList, afternoonBeg, afternoonEnd);
-		}
-		case NIGHT: {
-			return ArrayAverage(DataRetrieval.humidityArrayList, nightBeg, nightEnd);
-		}
-		default: {
-			return ArrayAverage(DataRetrieval.humidityArrayList, morningBeg, nightEnd);
-		}
-		}
+	public double getAverHumidity() {
+			return ArrayAverage(DataRetrieval.humidityArrayList, selBeg, selEnd);
 	}
 
 	public double ArrayAverage(ArrayList<Double> in, int low, int high) {

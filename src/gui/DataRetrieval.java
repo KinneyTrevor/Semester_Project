@@ -163,13 +163,10 @@ public class DataRetrieval {
 	}
 
 	public static Time nowToSQLTime() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 		java.sql.Time sqlTime = null;
-		GregorianCalendar now = new GregorianCalendar();
 
 		try {
-			java.util.Date time = simpleDateFormat.parse(now.get(11) + ":" + now.get(12) + ":" + now.get(13));
-			sqlTime = new Time(time.getTime());
+			sqlTime = new Time(System.currentTimeMillis());
 		} catch (Exception e) {
 			System.out.println("Error parsing time string: " + e);
 		}
@@ -188,40 +185,6 @@ public class DataRetrieval {
 	}
 
 	public static void main(String[] args) {
-		try {
-			establishConnection();
-			deleteAll(conn);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.NIGHT.getStartTime()), 22, 18, 31, 07);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.NIGHT.getEndTime()), 22, 18, 31, 07);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.MORNING.getStartTime()), 22, 18, 31, 07);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.MORNING.getEndTime()), 22, 18, 31, 07);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.AFTERNOON.getStartTime()), 22, 18, 31, 07);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.AFTERNOON.getEndTime()), 22, 18, 31, 07);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.EVENING.getStartTime()), 22, 18, 31, 07);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime("20:40:10"), 22, 18, 31, 07);
-			updateDB(conn, todayToSQLDate(), stringToSQLTime(TIMESOFDAY.EVENING.getEndTime()), 22, 18, 31, 07);
-			retrieveData();
-			for (java.sql.Date el : dateArrayList) {
-				System.out.println(el);
-			}
-			for (java.sql.Time el : timeArrayList) {
-				System.out.println(el);
-			}
-			for (Double el : temperatureArrayList) {
-				System.out.println(el);
-			}
-			for (Double el : rainArrayList) {
-				System.out.println(el);
-			}
-			for (Double el : windArrayList) {
-				System.out.println(el);
-			}
-			for (Double el : humidityArrayList) {
-				System.out.println(el);
-			}
-			closeConnection();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		System.out.println(stringToSQLTime(TIMESOFDAY.NIGHT.getEndTime()));
 	}
 }
